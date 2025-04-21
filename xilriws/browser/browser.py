@@ -308,11 +308,11 @@ class Browser:
             ):
                 if item is not None:
                     for subitem in (
-                        "BraveSoftware/Brave-Browser/Application",
-                        "Google/Chrome/Application",
-                        "Google/Chrome Beta/Application",
-                        "Google/Chrome Canary/Application",
-                        # "Chromium/Application"
+                        # "BraveSoftware/Brave-Browser/Application",
+                        # "Google/Chrome/Application",
+                        # "Google/Chrome Beta/Application",
+                        # "Google/Chrome Canary/Application",
+                        "Chromium/Application"
                     ):
                         # candidates.append(os.sep.join((item, subitem, "brave.exe")))
                         candidates.append(os.sep.join((item, subitem, "chrome.exe")))

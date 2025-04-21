@@ -65,7 +65,7 @@ class BrowserJoin(Browser):
                 raise ProxyException(f"Page couldn't be reached (Proxy: {proxy.url})")
 
             try:
-                await asyncio.wait_for(js_future, timeout=15)
+                await asyncio.wait_for(js_future, timeout=100)
                 self.tab.handlers.clear()
                 logger.info("JS check done. reloading")
             except asyncio.TimeoutError:
@@ -81,9 +81,9 @@ class BrowserJoin(Browser):
             # TODO check for error 16, mark proxies as dead
 
             try:
-                await self.tab.wait_for("iframe[title='reCAPTCHA']", timeout=25)
+                await self.tab.wait_for("iframe[title='reCAPTCHA']", timeout=100)
             except asyncio.TimeoutError:
-                raise LoginException("Timeout while waiting for captcha")
+                raise LoginException("Timeout waiting for captcha")
 
             obj, error = await self.tab.send(nodriver.cdp.runtime.evaluate(recaptcha.SRC))
 
@@ -92,7 +92,7 @@ class BrowserJoin(Browser):
             obj, errors = await self.tab.send(nodriver.cdp.runtime.evaluate(load.SRC))
             obj: nodriver.cdp.runtime.RemoteObject
 
-            logger.info("Getting tokens")
+            logger.info("Getting captcha tokens")
             r, errors = await self.tab.send(nodriver.cdp.runtime.await_promise(obj.object_id, return_by_value=True))
 
             logger.info("Getting cookies from browser")

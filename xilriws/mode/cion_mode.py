@@ -19,7 +19,8 @@ logger = logger.bind(name="Xilriws")
 async def cion_endpoint(ptc_join: PtcJoin) -> list[CionResponse]:
     try:
         tokens = await ptc_join.get_join_tokens()
-        logger.success(f"200: Returned {len(tokens)} Cion tokens")
+        if tokens:
+            logger.success(f"200: Returned {len(tokens)} Cion tokens")
         return tokens
 
     except Exception as e:
