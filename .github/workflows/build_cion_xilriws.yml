@@ -1,14 +1,14 @@
-name: publish
+name: build_cion_xilriws
 
 on:
   workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  CION_IMAGE_NAME: ${{ github.repository }}/cion
 
 jobs:
-  build-and-push-image:
+  build-cion-xilriws:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -30,11 +30,12 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.CION_IMAGE_NAME }}
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: ./DockerfileCion
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
           push: true
