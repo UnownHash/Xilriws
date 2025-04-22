@@ -312,7 +312,7 @@ class Browser:
                         # "Google/Chrome/Application",
                         # "Google/Chrome Beta/Application",
                         # "Google/Chrome Canary/Application",
-                        "Chromium/Application"
+                        "Chromium/Application",
                     ):
                         # candidates.append(os.sep.join((item, subitem, "brave.exe")))
                         candidates.append(os.sep.join((item, subitem, "chrome.exe")))

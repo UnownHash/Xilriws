@@ -72,17 +72,22 @@ class BrowserJoin(Browser):
                 raise LoginException("Timeout on JS challenge")
 
             await self.tab.reload()
-            html = await self.tab.get_content()
 
-            if "signup" not in html.lower():
-                imp_code, imp_reason = ptc_utils.get_imperva_error_code(html)
+            logger.debug("Waiting for imperva or recaptcha iframe")
+            found_captcha = False
+            found_error = False
+            loop = asyncio.get_running_loop()
+            start_time = loop.time()
+            while not found_captcha and not found_error and start_time + 100 > loop.time():
+                found_captcha = await self.tab.query_selector("iframe[title='reCAPTCHA']")
+                found_error = await self.tab.query_selector("iframe#main-iframe")
+
+            if found_error:
+                # TODO check for error 16, mark proxies as dead
+                imp_code, imp_reason = ptc_utils.get_imperva_error_code(await self.tab.get_content())
                 raise LoginException(f"Error code {imp_code} ({imp_reason}) with Proxy ({proxy.url})")
 
-            # TODO check for error 16, mark proxies as dead
-
-            try:
-                await self.tab.wait_for("iframe[title='reCAPTCHA']", timeout=100)
-            except asyncio.TimeoutError:
+            if not found_captcha:
                 raise LoginException("Timeout waiting for captcha")
 
             obj, error = await self.tab.send(nodriver.cdp.runtime.evaluate(recaptcha.SRC))
