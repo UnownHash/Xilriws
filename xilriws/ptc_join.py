@@ -4,7 +4,7 @@ from .task_creator import task_creator
 from loguru import logger
 import asyncio
 from .proxy_dispenser import ProxyDispenser
-from .proxy import ProxyDistributor
+from .proxy import ProxyDistributor, Proxy
 from time import time
 
 logger = logger.bind(name="Tokens")
@@ -18,11 +18,12 @@ class PtcJoin:
         self.proxy_dispenser = proxy_dispenser
         self.last_cion_call = time()
 
-    async def get_join_tokens(self) -> list[CionResponse]:
-        self.last_cion_call = time()
-        responses = self.responses.copy()
-        self.responses.clear()
-        return responses
+    async def get_join_tokens(self, proxy: str | None) -> CionResponse | None:
+        try:
+            logger.info(f"Getting cion tokens using proxy {proxy}")
+            return await self.browser.get_join_tokens(Proxy(proxy))
+        except Exception as e:
+            logger.exception("unhandled exception while getting tokens", e)
 
     async def prepare(self):
         task_creator.create_task(self.fill_task())

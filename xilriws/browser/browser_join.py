@@ -15,6 +15,7 @@ from xilriws.ptc_auth import LoginException
 from .browser import Browser, ProxyException
 from xilriws.ptc import ptc_utils
 from xilriws.extension_comm import FINISH_PROXY, FINISH_COOKIE_PURGE
+from xilriws.proxy import Proxy
 
 
 logger = logger.bind(name="Browser")
@@ -30,9 +31,7 @@ class CionResponse:
 
 
 class BrowserJoin(Browser):
-    async def get_join_tokens(self, proxy_changed: bool) -> CionResponse | None:
-        proxy = self.proxies.next_proxy
-
+    async def get_join_tokens(self, proxy: Proxy) -> CionResponse | None:
         try:
             await self.start_browser()
         except Exception:
@@ -45,8 +44,23 @@ class BrowserJoin(Browser):
 
             await self.new_tab()
 
-            if proxy_changed:
-                await self.change_proxy()
+            proxy_future = await self.ext_comm.add_listener(FINISH_PROXY)
+
+            await self.ext_comm.send(
+                "setProxy",
+                {
+                    "host": proxy.host,
+                    "port": proxy.port,
+                    "scheme": proxy.scheme,
+                    "password": proxy.password,
+                    "username": proxy.username,
+                }
+            )
+
+            try:
+                await asyncio.wait_for(proxy_future, 2)
+            except asyncio.TimeoutError:
+                logger.info("Didn't get confirmation that proxy changed, continuing anyway")
 
             if not self.first_run and cookie_future and not cookie_future.done():
                 try:
