@@ -4,6 +4,7 @@ import litestar.logging
 from litestar import Litestar, post
 from litestar.di import Provide
 from litestar.exceptions import HTTPException
+from litestar.status_codes import HTTP_503_SERVICE_UNAVAILABLE
 from loguru import logger
 from dataclasses import dataclass
 
@@ -23,6 +24,9 @@ class CionRequest:
 
 @post("/api/v1/cion")
 async def cion_endpoint(ptc_join: PtcJoin, data: CionRequest) -> list[CionResponse]:
+    if ptc_join.is_running:
+        raise HTTPException(status_code=HTTP_503_SERVICE_UNAVAILABLE)
+
     try:
         tokens = await ptc_join.get_join_tokens(data.proxy)
         if tokens:

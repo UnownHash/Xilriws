@@ -8,15 +8,12 @@ import nodriver
 from loguru import logger
 
 from xilriws.constants import JOIN_URL
-from xilriws.debug import IS_DEBUG
-from xilriws.extension_comm import FINISH_PROXY
+from xilriws.extension_comm import FINISH_PROXY, FINISH_COOKIE_PURGE
 from xilriws.js import load, recaptcha
+from xilriws.proxy import Proxy
+from xilriws.ptc import ptc_utils
 from xilriws.ptc_auth import LoginException
 from .browser import Browser, ProxyException
-from xilriws.ptc import ptc_utils
-from xilriws.extension_comm import FINISH_PROXY, FINISH_COOKIE_PURGE
-from xilriws.proxy import Proxy
-
 
 logger = logger.bind(name="Browser")
 
@@ -72,6 +69,7 @@ class BrowserJoin(Browser):
 
             self.tab.add_handler(nodriver.cdp.network.ResponseReceived, js_check_handler)
             logger.info("Opening Join page")
+
             await self.tab.get(url=JOIN_URL)
 
             html = await self.tab.get_content()

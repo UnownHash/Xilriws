@@ -17,13 +17,20 @@ class PtcJoin:
         self.proxies = proxies
         self.proxy_dispenser = proxy_dispenser
         self.last_cion_call = time()
+        self.is_running = False
 
     async def get_join_tokens(self, proxy: str | None) -> CionResponse | None:
+        self.is_running = True
+
         try:
             logger.info(f"Getting cion tokens using proxy {proxy}")
-            return await self.browser.get_join_tokens(Proxy(proxy))
+            resp = await self.browser.get_join_tokens(Proxy(proxy))
+            self.is_running = False
+            return resp
         except Exception as e:
             logger.exception("unhandled exception while getting tokens", e)
+
+        self.is_running = False
 
     async def prepare(self):
         task_creator.create_task(self.fill_task())
