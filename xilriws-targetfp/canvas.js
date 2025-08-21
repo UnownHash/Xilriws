@@ -7,8 +7,8 @@ const typeValues = {
 const possibleFonts = ["ArialUnicodeMS", "Calibri", "Century", "Haettenschweiler", "Marlett", "Pristina", "Bauhaus93", "FuturaBkBT", "HelveticaNeue", "LucidaSans", "MYRIADPRO", "SegoeUILight"]
 
 export function block() {
-    utils.overwriteProp(CanvasRenderingContext2D.prototype, "isPointInPath", () => false)
-    utils.overwriteProp(CanvasRenderingContext2D.prototype, "globalCompositeOperation", "screen")
+    // utils.overwriteProp(CanvasRenderingContext2D.prototype, "isPointInPath", () => false)
+    // utils.overwriteProp(CanvasRenderingContext2D.prototype, "globalCompositeOperation", "screen")
 
     function zeroOrOne() {
         return utils.randomNumber(0, 2)
@@ -50,19 +50,19 @@ export function block() {
         return metrics
     }
 
-    const originalArc = CanvasRenderingContext2D.prototype.arc
-    CanvasRenderingContext2D.prototype.arc = function (n1, n2, n3, zero, pi2, bool) {
-        n1 += utils.randomNumber(-1, 2)
-        n2 += utils.randomNumber(-1, 2)
-        n3 += utils.randomNumber(-1, 2)
-        return originalArc.bind(this, n1, n2, n3, zero, pi2, bool)()
-    }
-
-    const originalPutImageData = CanvasRenderingContext2D.prototype.putImageData
-    CanvasRenderingContext2D.prototype.putImageData = function (img, x, y, ...args) {
-        // this doesn't actually do anything. however, it doesn't appear this canvas differs between different chromiums
-        x += utils.randomNumber(-1, 2)
-        y += utils.randomNumber(-1, 2)
-        return originalPutImageData.bind(this, img, x, y, ...args)()
-    }
+    // const originalArc = CanvasRenderingContext2D.prototype.arc
+    // CanvasRenderingContext2D.prototype.arc = function (n1, n2, n3, zero, pi2, bool) {
+    //     n1 += utils.randomNumber(-1, 2)
+    //     n2 += utils.randomNumber(-1, 2)
+    //     n3 += utils.randomNumber(-1, 2)
+    //     return originalArc.bind(this, n1, n2, n3, zero, pi2, bool)()
+    // }
+    //
+    // const originalPutImageData = CanvasRenderingContext2D.prototype.putImageData
+    // CanvasRenderingContext2D.prototype.putImageData = function (img, x, y, ...args) {
+    //     // this doesn't actually do anything. however, it doesn't appear this canvas differs between different chromiums
+    //     x += utils.randomNumber(-1, 2)
+    //     y += utils.randomNumber(-1, 2)
+    //     return originalPutImageData.bind(this, img, x, y, ...args)()
+    // }
 }

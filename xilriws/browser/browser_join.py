@@ -48,7 +48,7 @@ class BrowserJoin(Browser):
                 {
                     "host": proxy.host,
                     "port": proxy.port,
-                    "scheme": proxy.scheme,
+                    "scheme": proxy.scheme if proxy.scheme else None,
                     "password": proxy.password,
                     "username": proxy.username,
                 }

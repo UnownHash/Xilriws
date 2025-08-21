@@ -50,6 +50,7 @@ const screenSizes = [
 export function block() {
     const [screenWidth, screenHeight] = utils.randomChoose(screenSizes)
     console.log("screen size is " + screenWidth + "x" + screenHeight)
+
     utils.overwriteProp(window.screen, "width", screenWidth)
     utils.overwriteProp(window.screen, "height", screenHeight)
     utils.overwriteProp(window.screen, "availWidth", screenWidth)
