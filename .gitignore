@@ -9,8 +9,8 @@ requirements.txt
 fingerprint-random*
 xilriws-cookie-delete*
 test
-*.js
-*.txt
+/*.js
+/*.txt
 node_modules/*
 test*
 chrome_win_fp.json
