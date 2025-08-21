@@ -1,4 +1,5 @@
 import * as utils from "./utils.js"
+import * as funcToString from "./funcToString.js"
 
 const baseLanguages = [
     "en-US",
@@ -44,6 +45,8 @@ export function block() {
 
     const timezone = utils.randomChoose(timezones) * -60
     utils.overwriteProp(Date.prototype, "getTimezoneOffset", () => timezone)
+    funcToString.set(Date.prototype.getTimezoneOffset)
+
     utils.overwriteProp(Navigator.prototype, "mimeTypes", {
         0: {
             suffixes: "pdf",

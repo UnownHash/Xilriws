@@ -1,4 +1,5 @@
 import * as utils from "./utils.js"
+import * as funcToString from "./funcToString.js"
 
 const screenSizes = [
     [1680, 1050],
@@ -157,4 +158,7 @@ export function block() {
         mouseEventsActive = false
         return originalRemoveEventListener.bind(this, eventType, callback)()
     }
+
+    funcToString.set(Document.prototype.addEventListener)
+    funcToString.set(Document.prototype.removeEventListener)
 }

@@ -1,5 +1,5 @@
 import * as utils from "./utils.js"
-import {randomChoose} from "./utils.js";
+import * as funcToString from "./funcToString.js"
 
 export function block() {
     const glProto = WebGLRenderingContext.prototype
@@ -48,9 +48,7 @@ export function block() {
     }
 
     utils.overwriteProp(glProto.getParameter, "name", "getParameter")
-    // utils.overwriteProp(glProto.getParameter, "toString", () => "function getParameter() { [native code] }")
 
-    Function.prototype.toString = (func) => {
-        return "function () { [native code] }"
-    }
+    funcToString.set(glProto.getSupportedExtensions)
+    funcToString.set(glProto.getParameter)
 }

@@ -11,8 +11,8 @@
     while (!div) {
         div = document.querySelector("[data-xil-tab-id]")
         if (!div) {
-            console.log("didn't find seed element, waiting 0.3s")
-            await new Promise(resolve => setTimeout(resolve, 300))
+            console.log("didn't find seed element, waiting 0.1s")
+            await new Promise(resolve => setTimeout(resolve, 100))
         }
     }
     const seed = div.getAttribute("data-xil-tab-id")

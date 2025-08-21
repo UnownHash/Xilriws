@@ -1,4 +1,5 @@
 import * as utils from "./utils.js"
+import * as funcToString from "./funcToString.js"
 
 const typeValues = {
     " monospace": 1, " sans-serif": 2, " serif": 3
@@ -49,6 +50,7 @@ export function block() {
         metrics.actualBoundingBoxRight = value
         return metrics
     }
+    funcToString.set(CanvasRenderingContext2D.prototype.measureText)
 
     // const originalArc = CanvasRenderingContext2D.prototype.arc
     // CanvasRenderingContext2D.prototype.arc = function (n1, n2, n3, zero, pi2, bool) {
@@ -57,6 +59,7 @@ export function block() {
     //     n3 += utils.randomNumber(-1, 2)
     //     return originalArc.bind(this, n1, n2, n3, zero, pi2, bool)()
     // }
+    // funcToString.set(CanvasRenderingContext2D.prototype.arc)
     //
     // const originalPutImageData = CanvasRenderingContext2D.prototype.putImageData
     // CanvasRenderingContext2D.prototype.putImageData = function (img, x, y, ...args) {
@@ -65,4 +68,5 @@ export function block() {
     //     y += utils.randomNumber(-1, 2)
     //     return originalPutImageData.bind(this, img, x, y, ...args)()
     // }
+    // funcToString.set(CanvasRenderingContext2D.prototype.putImageData)
 }
