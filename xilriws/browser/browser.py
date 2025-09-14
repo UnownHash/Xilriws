@@ -11,7 +11,6 @@ from loguru import logger
 
 from xilriws.debug import IS_DEBUG
 from xilriws.extension_comm import ExtensionComm
-from xilriws.extension_comm import FINISH_PROXY
 from xilriws.proxy import ProxyDistributor
 from xilriws.ptc_auth import LoginException
 from xilriws.ptc.ptc_utils import USER_AGENT
@@ -32,9 +31,8 @@ class Browser:
     session_count = 0
     first_run = True
 
-    def __init__(self, extension_paths: list[str], proxies: ProxyDistributor, ext_comm: ExtensionComm):
+    def __init__(self, extension_paths: list[str], ext_comm: ExtensionComm):
         self.extension_paths: list[str] = extension_paths
-        self.proxies = proxies
         self.ext_comm = ext_comm
 
     async def start_browser(self):
@@ -202,17 +200,6 @@ class Browser:
                 js_future.set_result(True)
 
         return js_future, js_check_handler
-
-    async def change_proxy(self):
-        proxy_future = await self.ext_comm.add_listener(FINISH_PROXY)
-        # TODO: add try/except and restart the browser
-        used_proxy = await self.proxies.change_proxy()
-
-        if used_proxy:
-            try:
-                await asyncio.wait_for(proxy_future, 2)
-            except asyncio.TimeoutError:
-                logger.info("Didn't get confirmation that proxy changed, continuing anyway")
 
     async def new_tab(self):
         logger.info("Opening tab")

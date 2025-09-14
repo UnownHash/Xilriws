@@ -1,24 +1,27 @@
 from __future__ import annotations
 
 import asyncio
-import re
 
 import nodriver
 from loguru import logger
 
 from xilriws.constants import ACCESS_URL
-from xilriws.debug import IS_DEBUG
-from xilriws.extension_comm import FINISH_PROXY, FINISH_COOKIE_PURGE
+from xilriws.extension_comm import FINISH_COOKIE_PURGE, ExtensionComm, FINISH_PROXY
+from xilriws.proxy import ProxyDistributor
+from xilriws.ptc import ptc_utils
 from xilriws.ptc_auth import LoginException
 from xilriws.reese_cookie import ReeseCookie
-from .browser import Browser, ProxyException
-from xilriws.ptc import ptc_utils
 
+from .browser import Browser, ProxyException
 
 logger = logger.bind(name="Browser")
 
 
 class BrowserAuth(Browser):
+    def __init__(self, extension_paths: list[str], proxies: ProxyDistributor, ext_comm: ExtensionComm):
+        super().__init__(extension_paths=extension_paths, ext_comm=ext_comm)
+        self.proxies = proxies
+
     async def get_reese_cookie(self, proxy_changed: bool) -> ReeseCookie | None:
         proxy = self.proxies.next_proxy
 
@@ -125,7 +128,20 @@ class BrowserAuth(Browser):
         except Exception as e:
             logger.exception("Exception in browser", e)
 
-        logger.error("Error while getting cookie from browser, it will be restarted next time")
+        logger.error(
+            "Error while getting cookie from browser, it will be restarted next time"
+        )
         self.consecutive_failures += 1
         await self.stop_browser()
         return None
+
+    async def change_proxy(self):
+        proxy_future = await self.ext_comm.add_listener(FINISH_PROXY)
+        # TODO: add try/except and restart the browser
+        used_proxy = await self.proxies.change_proxy()
+
+        if used_proxy:
+            try:
+                await asyncio.wait_for(proxy_future, 2)
+            except asyncio.TimeoutError:
+                logger.info("Didn't get confirmation that proxy changed, continuing anyway")
