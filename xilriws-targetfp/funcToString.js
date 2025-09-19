@@ -17,5 +17,5 @@ Function.prototype.toLocaleString = function () {
 };
 
 export function set(func) {
-    fakeSources.set(window.alert, `function ${func.name}() { [native code] }`);
+    fakeSources.set(func, `function ${func.name}() { [native code] }`);
 }
