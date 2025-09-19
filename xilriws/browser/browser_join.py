@@ -4,7 +4,7 @@ import asyncio
 import time
 from dataclasses import dataclass
 
-import nodriver
+import zendriver
 from loguru import logger
 
 from xilriws.constants import JOIN_URL
@@ -67,7 +67,7 @@ class BrowserJoin(Browser):
 
             self.first_run = False
 
-            self.tab.add_handler(nodriver.cdp.network.ResponseReceived, js_check_handler)
+            self.tab.add_handler(zendriver.cdp.network.ResponseReceived, js_check_handler)
             logger.info("Opening Join page")
 
             await self.tab.get(url=JOIN_URL)
@@ -102,15 +102,15 @@ class BrowserJoin(Browser):
             if not found_captcha:
                 raise LoginException("Timeout waiting for captcha")
 
-            obj, error = await self.tab.send(nodriver.cdp.runtime.evaluate(recaptcha.SRC))
+            obj, error = await self.tab.send(zendriver.cdp.runtime.evaluate(recaptcha.SRC))
 
             logger.info("Preparing token retreiving")
 
-            obj, errors = await self.tab.send(nodriver.cdp.runtime.evaluate(load.SRC))
-            obj: nodriver.cdp.runtime.RemoteObject
+            obj, errors = await self.tab.send(zendriver.cdp.runtime.evaluate(load.SRC))
+            obj: zendriver.cdp.runtime.RemoteObject
 
             logger.info("Getting captcha tokens")
-            r, errors = await self.tab.send(nodriver.cdp.runtime.await_promise(obj.object_id, return_by_value=True))
+            r, errors = await self.tab.send(zendriver.cdp.runtime.await_promise(obj.object_id, return_by_value=True))
 
             logger.info("Getting cookies from browser")
             all_cookies = await self.get_cookies()
