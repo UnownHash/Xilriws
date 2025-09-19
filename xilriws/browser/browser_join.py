@@ -91,8 +91,12 @@ class BrowserJoin(Browser):
             loop = asyncio.get_running_loop()
             start_time = loop.time()
             while not found_captcha and not found_error and start_time + 100 > loop.time():
-                found_captcha = await self.tab.query_selector("iframe[title='reCAPTCHA']")
-                found_error = await self.tab.query_selector("iframe#main-iframe")
+                try:
+                    found_captcha = await self.tab.query_selector("iframe[title='reCAPTCHA']")
+                    found_error = await self.tab.query_selector("iframe#main-iframe")
+                except Exception as e:
+                    # this is handles by the while loop
+                    logger.debug(f"Exception in query_selector: {e}")
 
             if found_error:
                 # TODO check for error 16, mark proxies as dead

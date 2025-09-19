@@ -276,7 +276,7 @@ class Browser:
                 logger.info(f"Canvas fingerprint: {line}")
 
     async def stop_browser(self):
-        self.browser.stop()
+        await self.browser.stop()
         self.first_run = True
         self.tab = None
         self.browser = None
