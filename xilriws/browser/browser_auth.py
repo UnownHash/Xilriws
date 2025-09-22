@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 
-import nodriver
+import zendriver
 from loguru import logger
 
 from xilriws.constants import ACCESS_URL
@@ -53,7 +53,7 @@ class BrowserAuth(Browser):
             # if IS_DEBUG:
             #     await self.log_ip()
 
-            self.tab.add_handler(nodriver.cdp.network.ResponseReceived, js_check_handler)
+            self.tab.add_handler(zendriver.cdp.network.ResponseReceived, js_check_handler)
             logger.info("Opening PTC")
 
             try:

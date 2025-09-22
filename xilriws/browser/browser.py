@@ -6,7 +6,7 @@ import re
 import sys
 from typing import Callable
 
-import nodriver
+import zendriver
 from loguru import logger
 
 from xilriws.debug import IS_DEBUG
@@ -24,10 +24,10 @@ class ProxyException(Exception):
 
 
 class Browser:
-    browser: nodriver.Browser | None = None
-    tab: nodriver.Tab | None = None
+    browser: zendriver.Browser | None = None
+    tab: zendriver.Tab | None = None
     consecutive_failures = 0
-    last_cookies: list[nodriver.cdp.network.CookieParam] | None = None
+    last_cookies: list[zendriver.cdp.network.CookieParam] | None = None
     session_count = 0
     first_run = True
 
@@ -55,7 +55,7 @@ class Browser:
                 await self.stop_browser()
 
         if not self.browser:
-            config = nodriver.Config(headless=HEADLESS, browser_executable_path=self.__find_chrome_executable())
+            config = zendriver.Config(headless=HEADLESS, browser_executable_path=self.__find_chrome_executable())
             config.add_argument(f"--user-agent={USER_AGENT}")
             if not IS_DEBUG:
                 config.add_argument("--window-size=1,1")
@@ -91,7 +91,7 @@ class Browser:
                 for path in self.extension_paths:
                     config.add_extension(path)
 
-                self.browser = await nodriver.start(config)
+                self.browser = await zendriver.start(config)
                 full_command = f"{config.browser_executable_path} {' '.join(config())}"
                 logger.info(f"Starting browser: `{full_command}`")
 
@@ -132,7 +132,7 @@ class Browser:
                 )
                 raise e
 
-    async def __set_setting(self, shadow_roots: list[str], element_id: str, new_value: str, tab: nodriver.Tab):
+    async def __set_setting(self, shadow_roots: list[str], element_id: str, new_value: str, tab: zendriver.Tab):
         await tab.wait_for(shadow_roots[0])
 
         inject_js = "const element=document."
@@ -150,7 +150,7 @@ class Browser:
         async def _check():
             if not self.tab:
                 self.tab = await self.browser.get("about:blank")
-            resp = await self.tab.send(nodriver.cdp.browser.get_version())
+            resp = await self.tab.send(zendriver.cdp.browser.get_version())
             try:
                 logger.debug(f"Health Check - Chrome version is {resp[1]}")
             except IndexError:
@@ -168,7 +168,7 @@ class Browser:
         while not reese_value and attempts > 0:
             attempts -= 1
 
-            cookies = await self.tab.send(nodriver.cdp.network.get_cookies())
+            cookies = await self.tab.send(zendriver.cdp.network.get_cookies())
             for cookie in cookies:
                 if cookie.name == "reese84":
                     logger.info("Got cookies")
@@ -189,7 +189,7 @@ class Browser:
         js_future = asyncio.get_running_loop().create_future()
         basic_url = url.replace("https://", "").replace("/", "")
 
-        async def js_check_handler(event: nodriver.cdp.network.ResponseReceived):
+        async def js_check_handler(event: zendriver.cdp.network.ResponseReceived):
             handler_url = event.response.url
             if not handler_url.startswith(url):
                 return
@@ -212,9 +212,9 @@ class Browser:
         await self.tab.sleep(0.4)
 
     async def new_private_window(self):
-        context_id = await self.browser.connection.send(nodriver.cdp.target.create_browser_context())
+        context_id = await self.browser.connection.send(zendriver.cdp.target.create_browser_context())
         target_id = await self.browser.connection.send(
-            nodriver.cdp.target.create_target("about:blank", browser_context_id=context_id)
+            zendriver.cdp.target.create_target("about:blank", browser_context_id=context_id)
         )
         if self.tab:
             await self.tab.close()
@@ -225,7 +225,7 @@ class Browser:
             )
         )
 
-    async def __enable_private_extension(self, tab: nodriver.Tab):
+    async def __enable_private_extension(self, tab: zendriver.Tab):
         await tab.get("brave://extensions/")
         await tab.wait_for("extensions-manager")
         await tab.evaluate(
@@ -263,7 +263,7 @@ class Browser:
                 logger.info(f"Canvas fingerprint: {line}")
 
     async def stop_browser(self):
-        self.browser.stop()
+        await self.browser.stop()
         self.first_run = True
         self.tab = None
         self.browser = None

@@ -1,19 +1,28 @@
 from __future__ import annotations
 
+import asyncio
 from dataclasses import dataclass
 from enum import Enum
 
-from litestar import Litestar, post, Response, Request
+from litestar import Litestar, Request, Response, post
 from litestar.di import Provide
-from litestar.status_codes import HTTP_400_BAD_REQUEST, HTTP_500_INTERNAL_SERVER_ERROR, HTTP_200_OK, HTTP_418_IM_A_TEAPOT
+from litestar.status_codes import (
+    HTTP_200_OK,
+    HTTP_400_BAD_REQUEST,
+    HTTP_418_IM_A_TEAPOT,
+    HTTP_500_INTERNAL_SERVER_ERROR,
+    HTTP_408_REQUEST_TIMEOUT,
+)
 from loguru import logger
 
 from xilriws.browser import Browser
-from xilriws.ptc_auth import PtcAuth, LoginException, InvalidCredentials, PtcBanned
-from xilriws.reese_cookie import CookieMonster
-from .basic_mode import BasicMode
-from xilriws.proxy import ProxyDistributor, Proxy
+from xilriws.constants import AUTH_TIMEOUT
+from xilriws.proxy import ProxyDistributor
 from xilriws.proxy_dispenser import ProxyDispenser
+from xilriws.ptc_auth import InvalidCredentials, LoginException, PtcAuth, PtcBanned
+from xilriws.reese_cookie import CookieMonster
+
+from .basic_mode import BasicMode
 
 logger = logger.bind(name="Xilriws")
 
@@ -30,6 +39,7 @@ class AuthResponseStatus(Enum):
     ERROR = 2
     INVALID = 3
     BANNED = 4
+    TIMEOUT = 5
 
 
 @dataclass
@@ -41,7 +51,7 @@ class AuthResponse:
 @post("/api/v1/login-code")
 async def auth_endpoint(request: Request, ptc_auth: PtcAuth, data: AuthRequest) -> Response[AuthResponse]:
     try:
-        login_code = await ptc_auth.auth(data.username, data.password, data.url)
+        login_code = await asyncio.wait_for(ptc_auth.auth(data.username, data.password, data.url), timeout=AUTH_TIMEOUT)
 
         logger.success("200 OK: successful auth")
         return Response(
@@ -55,6 +65,12 @@ async def auth_endpoint(request: Request, ptc_auth: PtcAuth, data: AuthRequest) 
         return Response(AuthResponse(status=AuthResponseStatus.BANNED.name), status_code=HTTP_418_IM_A_TEAPOT)
     except LoginException as e:
         logger.error(f"Error: {str(e)}")
+    except asyncio.TimeoutError:
+        logger.error("408: Exceeded timeout")
+        return Response(
+            AuthResponse(status=AuthResponseStatus.TIMEOUT.name),
+            status_code=HTTP_408_REQUEST_TIMEOUT,
+        )
     except Exception as e:
         logger.exception(e)
 
