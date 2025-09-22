@@ -79,11 +79,11 @@ class BrowserJoin(Browser):
             try:
                 await asyncio.wait_for(js_future, timeout=100)
                 self.tab.handlers.clear()
-                logger.info("JS check done. reloading")
+                logger.info("JS check done, waiting for iframes")
             except asyncio.TimeoutError:
                 raise LoginException("Timeout on JS challenge")
 
-            await self.tab.reload()
+            # await self.tab.reload()
 
             logger.debug("Waiting for imperva or recaptcha iframe")
             found_captcha = False
@@ -121,6 +121,8 @@ class BrowserJoin(Browser):
             recaptcha_tokens = r.value
 
             self.consecutive_failures = 0
+
+            logger.info(f"Received {(self.bytes_received / 1024):.2f} KB this session")
 
             return CionResponse(
                 reese_cookie=all_cookies,

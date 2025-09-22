@@ -31,6 +31,7 @@ class Browser:
     last_cookies: list[zendriver.cdp.network.CookieParam] | None = None
     session_count = 0
     first_run = True
+    bytes_received = 0
 
     def __init__(self, extension_paths: list[str], proxies: ProxyDistributor, ext_comm: ExtensionComm):
         self.extension_paths: list[str] = extension_paths
@@ -39,8 +40,8 @@ class Browser:
 
     async def start_browser(self):
         if self.consecutive_failures >= 30:
-            logger.critical(f"{self.consecutive_failures} consecutive failures in the browser! this is really bad")
-            await asyncio.sleep(60 * 30)
+            logger.critical(f"{self.consecutive_failures} consecutive failures in the browser! this is not good")
+            await asyncio.sleep(1)
             self.consecutive_failures -= 1
             return None
 
@@ -148,6 +149,9 @@ class Browser:
         except Exception as e:
             logger.warning(f"{str(e)} while changing setting {element_id}, ignoring")
 
+    async def on_data_received(self, payload: zendriver.cdp.network.DataReceived):
+        self.bytes_received += payload.encoded_data_length
+
     async def health_check(self) -> bool:
         async def _check():
             if not self.tab:
@@ -222,7 +226,9 @@ class Browser:
             tab = await self.tab.get("about:blank", new_tab=True)
             await self.tab.close()
             self.tab = tab
-        await self.tab.sleep(0.4)
+
+        self.bytes_received = 0
+        self.tab.add_handler(zendriver.cdp.network.DataReceived, self.on_data_received)
 
     async def new_private_window(self):
         context_id = await self.browser.connection.send(zendriver.cdp.target.create_browser_context())

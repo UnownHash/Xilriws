@@ -10,7 +10,11 @@ const blockedAccessScripts = [
     "screen-name-script.js",
     "set-state-script.js",
 ]
-const blockedFiles = ["woff", "ttf", "css", "png", "jpg", "jpeg", "svg", "ico"]
+const blockedJoinScripts = [
+    "main.*.js.map",
+    "*.chunk.js",
+]
+const blockedFiles = ["woff", "ttf", "css", "png", "jpg", "jpeg", "svg", "ico", "json"]
 
 
 const BLOCK_URLS = [
@@ -19,10 +23,11 @@ const BLOCK_URLS = [
     "*://optimizationguide-pa.googleapis.com/*",
     "*://*.launchdarkly.com/*",
     "*://*.browser-intake-datadoghq.com/*",
-    "*://join.pokemon.com/manifest.json"
+    "*://join.pokemon.com/manifest.json",
 ]
 
 blockedAccessScripts.forEach(name => BLOCK_URLS.push("*://access.pokemon.com/scripts/" + name))
+blockedJoinScripts.forEach(name => BLOCK_URLS.push("*://join.pokemon.com/static/js/" + name))
 blockedFiles.forEach(name => BLOCK_URLS.push("*://*/*." + name + "*"))
 
 chrome.webRequest.onBeforeRequest.addListener(
