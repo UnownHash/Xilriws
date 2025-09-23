@@ -83,7 +83,7 @@ class BrowserJoin(Browser):
             except asyncio.TimeoutError:
                 raise LoginException("Timeout on JS challenge")
 
-            # await self.tab.reload()
+            await self.tab.reload()
 
             logger.debug("Waiting for imperva or recaptcha iframe")
             found_captcha = False
