@@ -110,7 +110,7 @@ class BrowserAuth(Browser):
             logger.info("Getting cookies from browser")
             all_cookies = await self.get_cookies()
 
-            logger.info(f"Received {self.bytes_received / 1024} KB this session")
+            logger.info(f"Received {(self.bytes_received / 1024):.2f} KB this session")
 
             self.consecutive_failures = 0
             return ReeseCookie(all_cookies, proxy)
