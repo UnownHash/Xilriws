@@ -10,12 +10,12 @@ import sys
 import uvicorn
 from loguru import logger
 
-from xilriws.browser import Browser, BrowserJoin, BrowserAuth
-from xilriws.mode import CionMode, AuthMode
+from xilriws.browser import BrowserAuth, BrowserJoin
+from xilriws.extension_comm import ExtensionComm
+from xilriws.mode import AuthMode, CionMode
 from xilriws.proxy import ProxyDistributor
 from xilriws.proxy_dispenser import ProxyDispenser
 from xilriws.task_creator import task_creator
-from xilriws.extension_comm import ExtensionComm
 
 httpx_logger = logging.getLogger("httpx")
 httpx_logger.setLevel(logging.CRITICAL)
@@ -23,8 +23,6 @@ uvicorn_logger = logging.getLogger("uvicorn")
 uvicorn_logger.setLevel(logging.CRITICAL)
 zendriver_logger = logging.getLogger("zendriver")
 zendriver_logger.setLevel(logging.CRITICAL)
-nodriver_logger = logging.getLogger("nodriver")
-nodriver_logger.setLevel(logging.CRITICAL)
 ws_logger = logging.getLogger("websockets")
 ws_logger.setLevel(logging.CRITICAL)
 conn_logger = logging.getLogger("uc.connection")
@@ -47,24 +45,24 @@ async def main(cion_mode: bool):
 
     ext_comm = ExtensionComm()
     task_creator.create_task(ext_comm.start())
-    proxies = ProxyDistributor(ext_comm)
 
-    browser_args = {
-        "extension_paths": [
-            config.get("proxy", "/xilriws/xilriws-proxy"),
-            config.get("targetfp_path", "/xilriws/xilriws-targetfp"),
-        ],
-        "proxies": proxies,
-        "ext_comm": ext_comm
-    }
-
-    proxy_dispenser = ProxyDispenser(config.get("proxies_list_path", "/xilriws/proxies.txt"))
+    extenstion_paths = [
+        config.get("proxy", "/xilriws/xilriws-proxy"),
+        config.get("targetfp_path", "/xilriws/xilriws-targetfp"),
+    ]
 
     if cion_mode:
         logger.info("Starting in Cion Mode")
-        mode = CionMode(BrowserJoin(**browser_args), proxies, proxy_dispenser)
+        mode = CionMode(
+            BrowserJoin(extension_paths=extenstion_paths, ext_comm=ext_comm)
+        )
     else:
-        mode = AuthMode(BrowserAuth(**browser_args), proxies, proxy_dispenser)
+        proxies = ProxyDistributor(ext_comm)
+        proxy_dispenser = ProxyDispenser(
+            config.get("proxies_list_path", "/xilriws/proxies.txt")
+        )
+
+        mode = AuthMode(BrowserAuth(extension_paths=extenstion_paths, ext_comm=ext_comm, proxies=proxies), proxies, proxy_dispenser)
 
     await mode.prepare()
 

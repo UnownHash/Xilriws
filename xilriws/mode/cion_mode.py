@@ -8,7 +8,7 @@ from litestar.status_codes import HTTP_503_SERVICE_UNAVAILABLE
 from loguru import logger
 from dataclasses import dataclass
 
-from xilriws.browser import Browser, CionResponse
+from xilriws.browser import Browser, CionResponse, BrowserJoin
 from xilriws.ptc_join import PtcJoin
 from .basic_mode import BasicMode
 from xilriws.proxy import ProxyDistributor, Proxy
@@ -42,12 +42,11 @@ async def cion_endpoint(ptc_join: PtcJoin, data: CionRequest) -> list[CionRespon
 
 
 class CionMode(BasicMode):
-    def __init__(self, browser: Browser, proxies: ProxyDistributor, proxy_dispenser: ProxyDispenser):
-        self.ptc_join = PtcJoin(browser, proxies, proxy_dispenser)
+    def __init__(self, browser: BrowserJoin):
+        self.ptc_join = PtcJoin(browser)
         self.current_proxy_index = 0
 
     async def prepare(self) -> None:
-        # await self.ptc_join.prepare()
         pass
 
     async def _get_ptc_join(self):
