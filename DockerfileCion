@@ -2,7 +2,7 @@ FROM ubuntu:latest
 
 # setup environment
 RUN apt update -y && \
-    apt clean \
+    apt clean
 
 WORKDIR /xilriws
 

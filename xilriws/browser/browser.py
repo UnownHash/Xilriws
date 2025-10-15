@@ -271,7 +271,7 @@ class Browser:
         self.browser = None
 
     def __find_chrome_executable(self, return_all=False):
-        candidates = ["/xilriws/chromium/chrome"]
+        candidates = ["/xilriws/chromium/chrome", "/chromium/chrome"]
         if sys.platform.startswith(("darwin", "cygwin", "linux", "linux2")):
             for item in os.environ.get("PATH").split(os.pathsep):
                 for subitem in (

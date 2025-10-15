@@ -23,13 +23,13 @@
 
     screen.block()
     general.block()
+    webgl.block()
+    canvas.block()
 
-    if (window.top.document.location.hostname !== "join.pokemon.com") {
-        // hotfix. signups don't work with canvas blocking, but signigns require them
-        // should investigate why
-        canvas.block()
-        webgl.block()
-    }
+    // if (window.top.document.location.hostname !== "join.pokemon.com") {
+    //     // hotfix. signups don't work with canvas blocking, but signigns require them
+    //     // should investigate why
+    // }
 
     document.fpLoaded = true
 })()
