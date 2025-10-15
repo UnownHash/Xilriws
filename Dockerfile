@@ -16,6 +16,7 @@ RUN pip install --upgrade pip==25.0.1
 RUN pip install poetry
 
 # install chromium dependencies
+# from https://github.com/ungoogled-software/ungoogled-chromium-portablelinux/blob/master/docker/build.Dockerfile
 RUN apt-get -y install wget bison debhelper desktop-file-utils flex gperf gsettings-desktop-schemas-dev imagemagick \
   libasound2-dev libavcodec-dev libavformat-dev libavutil-dev libcap-dev libcups2-dev libcurl4-openssl-dev libdrm-dev \
   libegl1-mesa-dev libelf-dev libevent-dev libexif-dev libflac-dev libgbm-dev libgcrypt20-dev libgl1-mesa-dev libgles2-mesa-dev \
