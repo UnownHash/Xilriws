@@ -175,22 +175,24 @@ files = [
 
 [[package]]
 name = "curl-cffi"
-version = "0.6.3"
+version = "0.14.0b2"
 description = "libcurl ffi bindings for Python, with impersonation support."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "curl_cffi-0.6.3-cp38-abi3-macosx_10_9_x86_64.whl", hash = "sha256:ac60ac08f07640bd9ee6ee44310748931a3d49a7c8e878745f1817b46ff0719d"},
-    {file = "curl_cffi-0.6.3-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:d78a609c3b984df9a14022c0b5fc59c1c643c39fc4cb9100e110f7551339a194"},
-    {file = "curl_cffi-0.6.3-cp38-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:760b7b837c86626f2c9518c3bad42aad3b6ccb455499b648bc98e8dee9f73891"},
-    {file = "curl_cffi-0.6.3-cp38-abi3-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:5423c2f53f8889bcc9ce42455fc1c0c9487b480944f66aaa6ed5ce81e0fc5540"},
-    {file = "curl_cffi-0.6.3-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4b4712bc9a8a0d933aef7051eaa5448b9a1c662f25dd83967dbdd46aa3e418c0"},
-    {file = "curl_cffi-0.6.3-cp38-abi3-musllinux_1_1_aarch64.whl", hash = "sha256:5d659acbe051805b9f9c82a7725d534b5842c1a9291159e7733e7c92782ef80b"},
-    {file = "curl_cffi-0.6.3-cp38-abi3-musllinux_1_1_x86_64.whl", hash = "sha256:ea9b04df071368d13b02c51e87e3e51b46b924be61681fc280cb9633b42dac2c"},
-    {file = "curl_cffi-0.6.3-cp38-abi3-win32.whl", hash = "sha256:0f37e3d761e37173462dbc95ae4216165dacef21f0d9ab6bb6802003516a156f"},
-    {file = "curl_cffi-0.6.3-cp38-abi3-win_amd64.whl", hash = "sha256:dd36513cd46eb8f2751d45e3aa47a989421d3f3a2bcc54abab487ae38549d91b"},
-    {file = "curl_cffi-0.6.3.tar.gz", hash = "sha256:0d2d07467590d66982f29a8dc9050b6a1f41a6c4bb44dcbf24108b13cf71a797"},
+    {file = "curl_cffi-0.14.0b2-cp39-abi3-macosx_13_0_x86_64.whl", hash = "sha256:f843c77cc8ce573fdb692cb8e4e6f44e7effae54687cfbcaad2e49574e009ea4"},
+    {file = "curl_cffi-0.14.0b2-cp39-abi3-macosx_14_0_arm64.whl", hash = "sha256:bd2e72846e619c8bc6e8dcc5061bdb56de516df65b9fabf4b9a124acb8d509aa"},
+    {file = "curl_cffi-0.14.0b2-cp39-abi3-manylinux_2_26_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:888fa8acc0e48b32bdcbed7e2627ccf89b65079c826ec0c0f690550886f0536b"},
+    {file = "curl_cffi-0.14.0b2-cp39-abi3-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:a5b85693641cd7384002fb8b4a6928657cfdf4e3f5532c3e56abbf9e5faaee07"},
+    {file = "curl_cffi-0.14.0b2-cp39-abi3-manylinux_2_28_armv7l.manylinux_2_31_armv7l.whl", hash = "sha256:c0259de0809e52a3697f1a7c6910f1815d446e4480fbb70d6793c463f189ba9f"},
+    {file = "curl_cffi-0.14.0b2-cp39-abi3-manylinux_2_28_i686.whl", hash = "sha256:cacb0e6f4029b3d461840811f1cd31553e54b10f3d1783ca61bbfeeb3e2e20e5"},
+    {file = "curl_cffi-0.14.0b2-cp39-abi3-manylinux_2_34_riscv64.manylinux_2_39_riscv64.whl", hash = "sha256:8f158d8cc9080f27328e6608e7c3130a3258a2750015994846f0f2d66e3bc3cf"},
+    {file = "curl_cffi-0.14.0b2-cp39-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:9de25e673fb48b573c7f8b4112c7b586db5ae55b8fd8919a0a330319aff52b58"},
+    {file = "curl_cffi-0.14.0b2-cp39-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:e1be65ebe44245065b1aee563637316b087e108f4a5b5c78419f94c857873db9"},
+    {file = "curl_cffi-0.14.0b2-cp39-abi3-win_amd64.whl", hash = "sha256:a6911ffbab7fd9e2970ebd0ea8831e7c52bbb7d3961e35d67fc14040fb9ad1dc"},
+    {file = "curl_cffi-0.14.0b2-cp39-abi3-win_arm64.whl", hash = "sha256:5eefbd18772e6c8830b544f683367477d06b73d1233e5e4f55ae3b258c819b68"},
+    {file = "curl_cffi-0.14.0b2.tar.gz", hash = "sha256:cd32b9b957f60eddfc903fc75f067b835c2b1beb204567247bee40205ffcdfe6"},
 ]
 
 [package.dependencies]
@@ -199,8 +201,9 @@ cffi = ">=1.12.0"
 
 [package.extras]
 build = ["cibuildwheel", "wheel"]
-dev = ["autoflake (==1.4)", "charset-normalizer (>=3.3.2,<4)", "coverage (==6.4.1)", "cryptography (==38.0.3)", "flake8 (==6.0.0)", "flake8-bugbear (==22.7.1)", "flake8-pie (==0.15.0)", "httpx (==0.23.1)", "mypy (==1.9.0)", "pytest (==7.1.2)", "pytest-asyncio (==0.19.0)", "pytest-trio (==0.7.0)", "ruff (==0.3.3)", "trio (==0.21.0)", "trio-typing (==0.7.0)", "trustme (==0.9.0)", "types-certifi (==2021.10.8.2)", "uvicorn (==0.18.3)", "websockets (==11.0.3)"]
-test = ["charset-normalizer (>=3.3.2,<4)", "cryptography (==38.0.3)", "fastapi (==0.100.0)", "httpx (==0.23.1)", "proxy.py (==2.4.3)", "pytest (==7.1.2)", "pytest-asyncio (==0.19.0)", "pytest-trio (==0.7.0)", "python-multipart (==0.0.6)", "trio (==0.21.0)", "trio-typing (==0.7.0)", "trustme (==0.9.0)", "types-certifi (==2021.10.8.2)", "uvicorn (==0.18.3)", "websockets (==11.0.3)"]
+dev = ["charset_normalizer (>=3.3.2,<4.0)", "coverage (>=6.4.1,<7.0)", "cryptography (>=42.0.5,<43.0)", "httpx (==0.23.1)", "mypy (>=1.9.0,<2.0)", "pytest (>=8.1.1,<9.0)", "pytest-asyncio (>=0.23.6,<1.0)", "pytest-trio (>=0.8.0,<1.0)", "ruff (>=0.3.5,<1.0)", "trio (>=0.25.0,<1.0)", "trustme (>=1.1.0,<2.0)", "typing_extensions", "uvicorn (>=0.29.0,<1.0)", "websockets (>=12.0,<13.0)"]
+extra = ["lxml_html_clean", "markdownify (>=1.1.0)", "readability-lxml (>=0.8.1)"]
+test = ["charset_normalizer (>=3.3.2,<4.0)", "cryptography (>=42.0.5,<43.0)", "fastapi (==0.110.0)", "httpx (==0.23.1)", "proxy.py (>=2.4.3,<3.0)", "pytest (>=8.1.1,<9.0)", "pytest-asyncio (>=0.23.6,<1.0)", "pytest-trio (>=0.8.0,<1.0)", "python-multipart (>=0.0.9,<1.0)", "trio (>=0.25.0,<1.0)", "trustme (>=1.1.0,<2.0)", "typing_extensions", "uvicorn (>=0.29.0,<1.0)", "websockets (>=12.0,<13.0)"]
 
 [[package]]
 name = "deprecated"
@@ -1517,4 +1520,4 @@ websockets = ">=14.0"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
-content-hash = "778995c8412d25fb2de02d5774acf3239faf5e597bd2fec317ff649a201a1c63"
+content-hash = "53e20f6fe107f2f8ce2fcfce04ab86d507cc2c6c744fbe434f49c8592ee59fcb"
