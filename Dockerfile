@@ -1,16 +1,12 @@
 FROM ubuntu:latest
+
+# setup environment
 RUN apt update -y && \
-    apt clean
+    apt clean \
 
 WORKDIR /xilriws
 
 ENV DEBIAN_FRONTEND noninteractive
-#RUN apt install -y git-all
-#RUN git clone https://github.com/UnownHash/Xilriws-Public
-#RUN cp -r Xilriws-Public/xilriws-fingerprint-random /xilriws/xilriws-fingerprint-random
-#RUN cp -r Xilriws-Public/xilriws-cookie-delete /xilriws/xilriws-cookie-delete
-#RUN cp -r Xilriws-Public/xilriws-proxy /xilriws/xilriws-proxy
-#RUN cp -r Xilriws-Public/xilriws-targetfp /xilriws/xilriws-targetfp
 
 RUN apt install -y software-properties-common
 RUN apt update && apt install -y python3 python3-venv
@@ -19,24 +15,26 @@ ENV PATH="/opt/venv/bin:$PATH"
 RUN pip install --upgrade pip==25.0.1
 RUN pip install poetry
 
-RUN apt install -y wget
+# install chromium dependencies
+RUN apt-get -y install wget bison debhelper desktop-file-utils flex gperf gsettings-desktop-schemas-dev imagemagick \
+  libasound2-dev libavcodec-dev libavformat-dev libavutil-dev libcap-dev libcups2-dev libcurl4-openssl-dev libdrm-dev \
+  libegl1-mesa-dev libelf-dev libevent-dev libexif-dev libflac-dev libgbm-dev libgcrypt20-dev libgl1-mesa-dev libgles2-mesa-dev \
+  libglew-dev libglib2.0-dev libglu1-mesa-dev libgtk-3-dev libhunspell-dev libjpeg-dev libjs-jquery-flot libjsoncpp-dev \
+  libkrb5-dev liblcms2-dev libminizip-dev libmodpbase64-dev libnspr4-dev libnss3-dev libopenjp2-7-dev libopus-dev libpam0g-dev \
+  libpci-dev libpipewire-0.3-dev libpng-dev libpulse-dev libre2-dev libsnappy-dev libspeechd-dev libudev-dev libusb-1.0-0-dev \
+  libva-dev libvpx-dev libwebp-dev libx11-xcb-dev libxcb-dri3-dev libxshmfence-dev libxslt1-dev libxss-dev libxt-dev libxtst-dev\
+  mesa-common-dev ninja-build pkg-config python3-jinja2 python3-setuptools python3-xcbgen python-is-python3 qtbase5-dev \
+  uuid-dev valgrind wdiff x11-apps xcb-proto xfonts-base xvfb xz-utils yasm
 
-RUN wget -q -O - https://github.com/NDViet/google-chrome-stable/releases/download/125.0.6422.141-1/google-chrome-stable_125.0.6422.141-1_amd64.deb > ./chrome.deb
-RUN apt install -y ./chrome.deb
-RUN rm ./chrome.deb
+# install chromium
+RUN wget -O chromium.tar.xz https://github.com/ungoogled-software/ungoogled-chromium-portablelinux/releases/download/141.0.7390.76-1/ungoogled-chromium-141.0.7390.76-1-x86_64_linux.tar.xz
+RUN mkdir chromium_install \
+    && tar -xf chromium.tar.xz -C chromium_install/ \
+    && mkdir chromium \
+    && mv chromium_install/*/* chromium \
+    && rm chromium.tar.xz
 
-#RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub > linux_signing_key.pub
-#RUN install -D -o root -g root -m 644 linux_signing_key.pub /etc/apt/keyrings/linux_signing_key.pub
-#RUN sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/linux_signing_key.pub] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
-#RUN apt update -y
-#RUN apt install -y google-chrome-stable
-
-#RUN apt install -y curl
-#RUN curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
-#RUN echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"| tee /etc/apt/sources.list.d/brave-browser-release.list
-#RUN apt update -y
-#RUN apt install -y brave-browser
-
+# install Xilriws dependencies
 COPY . .
 RUN poetry install --no-root
 

@@ -76,7 +76,9 @@ class Browser:
                 "BackForwardCache",
                 "AcceptCHFrame",
                 "MediaRouter",
-                "DialMediaRouteProvider"
+                "DialMediaRouteProvider",
+                "IsolateOrigins",
+                "DisableLoadExtensionCommandLineSwitch"
             ]
             config.add_argument(f"--disable-features={','.join(disabled_features)}")
             config.add_argument("--disable-hang-monitor")
@@ -92,7 +94,7 @@ class Browser:
                     config.add_extension(path)
 
                 self.browser = await zendriver.start(config)
-                full_command = f"{config.browser_executable_path} {' '.join(config())}"
+                full_command = f"{self.browser.config.browser_executable_path} {' '.join(self.browser.config())}"
                 logger.info(f"Starting browser: `{full_command}`")
 
                 if "brave" in self.browser.config.browser_executable_path.lower():
@@ -269,7 +271,7 @@ class Browser:
         self.browser = None
 
     def __find_chrome_executable(self, return_all=False):
-        candidates = []
+        candidates = ["/xilriws/chromium/chrome"]
         if sys.platform.startswith(("darwin", "cygwin", "linux", "linux2")):
             for item in os.environ.get("PATH").split(os.pathsep):
                 for subitem in (
