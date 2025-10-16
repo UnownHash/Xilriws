@@ -6,6 +6,7 @@ from typing import Any, Literal
 
 import websockets
 from loguru import logger
+from xilriws.proxy import Proxy
 
 logger = logger.bind(name="ExtComm")
 
@@ -17,6 +18,31 @@ class ExtensionComm:
     def __init__(self):
         self.clients: set[websockets.WebSocketServerProtocol] = set()
         self.futures: dict[str, list[asyncio.Future]] = {}
+
+    async def send(self, action: str, data: dict[str, Any] | None = None):
+        message = json.dumps(
+            {
+                "action": action,
+                "data": data
+            }
+        )
+        logger.debug(f"Sending WS data: {message}")
+        for client in self.clients:
+            await client.send(message)
+
+    async def set_proxy(self, proxy: Proxy):
+        await self.send(
+            "setProxy",
+            {
+                "host": proxy.host,
+                "port": proxy.port,
+                "scheme": proxy.scheme if proxy.scheme else None,
+                "password": proxy.password,
+                "username": proxy.username,
+            },
+        )
+
+    # async def fetch(self, url: str, headers: dict[str, str], method: str, referrer: str, body: str):
 
     async def echo(self, websocket: websockets.WebSocketServerProtocol):
         self.clients.add(websocket)
@@ -45,17 +71,6 @@ class ExtensionComm:
             logger.exception("Error in WS server", e)
         finally:
             self.clients.remove(websocket)
-
-    async def send(self, action: str, data: dict[str, Any] | None = None):
-        message = json.dumps(
-            {
-                "action": action,
-                "data": data
-            }
-        )
-        logger.debug(f"Sending WS data: {message}")
-        for client in self.clients:
-            await client.send(message)
 
     async def add_listener(self, action: str) -> asyncio.Future:
         future = asyncio.get_running_loop().create_future()

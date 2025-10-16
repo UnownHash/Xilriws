@@ -43,16 +43,7 @@ class BrowserJoin(Browser):
 
             proxy_future = await self.ext_comm.add_listener(FINISH_PROXY)
 
-            await self.ext_comm.send(
-                "setProxy",
-                {
-                    "host": proxy.host,
-                    "port": proxy.port,
-                    "scheme": proxy.scheme if proxy.scheme else None,
-                    "password": proxy.password,
-                    "username": proxy.username,
-                }
-            )
+            await self.ext_comm.set_proxy(proxy)
 
             try:
                 await asyncio.wait_for(proxy_future, 2)

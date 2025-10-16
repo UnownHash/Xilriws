@@ -87,6 +87,7 @@ class Browser:
             config.add_argument("--disable-default-apps")
             config.add_argument("--disable-renderer-backgrounding")
             config.add_argument("--no-first-run")
+            config.add_argument("--disable-web-security")
 
 
             try:

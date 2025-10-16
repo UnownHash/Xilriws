@@ -79,14 +79,6 @@ class ProxyDistributor:
 
         logger.info(f"Switching to Proxy {self.current_proxy.host}:{self.current_proxy.port}")
 
-        await self.ext_comm.send(
-            "setProxy",
-            {
-                "host": self.current_proxy.host,
-                "port": self.current_proxy.port,
-                "scheme": self.current_proxy.scheme,
-                "password": self.current_proxy.password,
-                "username": self.current_proxy.username,
-            }
-        )
+        await self.ext_comm.set_proxy(self.current_proxy)
+
         return True

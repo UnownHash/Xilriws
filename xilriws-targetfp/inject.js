@@ -29,6 +29,7 @@
     // if (window.top.document.location.hostname !== "join.pokemon.com") {
     //     // hotfix. signups don't work with canvas blocking, but signigns require them
     //     // should investigate why
+    //     canvas.block()
     // }
 
     document.fpLoaded = true
