@@ -45,6 +45,7 @@ export function block() {
 
     const timezone = utils.randomChoose(timezones) * -60
     utils.overwriteProp(Date.prototype, "getTimezoneOffset", () => timezone)
+    utils.setName(Date, "getTimezoneOffset")
     funcToString.set(Date.prototype.getTimezoneOffset)
 
     utils.overwriteProp(Navigator.prototype, "mimeTypes", {

@@ -5,7 +5,8 @@ let random = null
 export function sendWs(action, detail = null) {
     try {
         ws.send(JSON.stringify({action: action, detail: detail}))
-    } catch (e) {}
+    } catch (e) {
+    }
 }
 
 export function setSeed(newSeed) {
@@ -18,7 +19,7 @@ function seededRandom(seed) {
     let c = 12345;
     let state = seed ? seed : Math.floor(Math.random() * (m - 1));
 
-    return function() {
+    return function () {
         state = (a * state + c) % m;
         return state / (m - 1);
     };
@@ -32,9 +33,22 @@ function seededRandom(seed) {
 export function overwriteProp(object, propName, propValue) {
     Object.defineProperty(object, propName, {
         get: () => propValue,
-        set: () => {},
+        set: () => {
+        },
         configurable: true
     });
+}
+
+/**
+ * @param {Object} object
+ * @param {string} name
+ */
+export function setName(object, name) {
+    Object.defineProperty(object.prototype[name], "name", {
+        value: name,
+        writable: false,
+        configurable: true
+    })
 }
 
 /**
@@ -47,7 +61,7 @@ export function randomChoose(array) {
 }
 
 /**
- * Generates a random number within the given bounds.
+ * Generates a random integer number within the given bounds.
  * @param {number} min - The lower bound (inclusive).
  * @param {number} max - The upper bound (exclusive).
  * @returns {number} A random number between min (inclusive) and max (exclusive).

@@ -1,3 +1,5 @@
+import * as utils from "./utils.js"
+
 const realToString = Function.prototype.toString;
 const realToLocaleString = Function.prototype.toLocaleString;
 const fakeSources = new WeakMap();
@@ -16,6 +18,16 @@ Function.prototype.toLocaleString = function () {
     return realToLocaleString.call(this);
 };
 
-export function set(func) {
-    fakeSources.set(func, `function ${func.name}() { [native code] }`);
+function getFunctionString(name) {
+    return `function ${name}() { [native code] }`
 }
+
+export function set(func) {
+    fakeSources.set(func, getFunctionString(func.name));
+}
+
+utils.setName(Function, "toString")
+set(Function.prototype.toString)
+
+utils.setName(Function, "toLocaleString")
+set(Function.prototype.toLocaleString)

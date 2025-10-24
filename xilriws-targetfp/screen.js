@@ -159,6 +159,8 @@ export function block() {
         return originalRemoveEventListener.bind(this, eventType, callback)()
     }
 
+    utils.setName(Document, "addEventListener")
+    utils.setName(Document, "removeEventListener")
     funcToString.set(Document.prototype.addEventListener)
     funcToString.set(Document.prototype.removeEventListener)
 }

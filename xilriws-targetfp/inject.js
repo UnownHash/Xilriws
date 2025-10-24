@@ -6,6 +6,7 @@
     const general = await import("./general.js")
     const canvas = await import("./canvas.js")
     const webgl = await import("./webgl.js")
+    const funcToString = await import("./funcToString.js")
 
     let div = null
     while (!div) {
@@ -21,10 +22,32 @@
 
     utils.sendWs("debug:seed", seed)
 
-    screen.block()
-    general.block()
-    webgl.block()
-    canvas.block()
+    utils.setName(HTMLIFrameElement, "addEventListener")
+    funcToString.set(HTMLIFrameElement.prototype.addEventListener)
+
+    try {
+        screen.block()
+    } catch (e) {
+        console.error("Error while screen blocking", e)
+    }
+
+    try {
+        general.block()
+    } catch (e) {
+        console.error("Error while general blocking", e)
+    }
+
+    try {
+        webgl.block()
+    } catch (e) {
+        console.error("Error while webgl blocking", e)
+    }
+
+    try {
+        canvas.block()
+    } catch (e) {
+        console.error("Error while canvas blocking", e)
+    }
 
     // if (window.top.document.location.hostname !== "join.pokemon.com") {
     //     // hotfix. signups don't work with canvas blocking, but signigns require them
@@ -50,3 +73,4 @@ HTMLIFrameElement.prototype.addEventListener = async function (eventType, callba
     }
     callback()
 }
+
