@@ -35,7 +35,12 @@ class BrowserAuth(Browser):
             js_future, js_check_handler = await self.get_js_check_handler(ACCESS_URL)
             cookie_future = await self.ext_comm.add_listener(FINISH_COOKIE_PURGE)
 
-            await self.new_tab()
+            # await self.new_tab()
+            try:
+                await self.new_tab_timeout()
+            except asyncio.TimeoutError:
+                raise LoginException("Timeout while opening tab (this is probably a bug)")
+
             if proxy_changed:
                 await self.change_proxy()
 
@@ -57,7 +62,7 @@ class BrowserAuth(Browser):
             logger.info("Opening PTC")
 
             try:
-                await asyncio.wait_for(self.tab.get(url=ACCESS_URL + "login"), timeout=20)
+                await self.get_page(ACCESS_URL + "login")
                 html = await asyncio.wait_for(self.tab.get_content(), timeout=20)
             except asyncio.TimeoutError:
                 raise ProxyException(f"Page timed out (Proxy: {proxy.url})")

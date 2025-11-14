@@ -5,8 +5,8 @@ export function block() {
     const glProto = WebGLRenderingContext.prototype
     const gl2Proto = WebGL2RenderingContext.prototype
 
-    utils.overwriteProp(glProto, "getSupportedExtensions", () => ["ANGLE_instanced_arrays", "EXT_blend_minmax", "EXT_clip_control", "EXT_color_buffer_half_float", "EXT_depth_clamp", "EXT_disjoint_timer_query", "EXT_float_blend", "EXT_frag_depth", "EXT_polygon_offset_clamp", "EXT_shader_texture_lod", "EXT_texture_compression_bptc", "EXT_texture_compression_rgtc", "EXT_texture_filter_anisotropic", "EXT_texture_mirror_clamp_to_edge", "EXT_sRGB", "KHR_parallel_shader_compile", "OES_element_index_uint", "OES_fbo_render_mipmap", "OES_standard_derivatives", "OES_texture_float", "OES_texture_float_linear", "OES_texture_half_float", "OES_texture_half_float_linear", "OES_vertex_array_object", "WEBGL_blend_func_extended", "WEBGL_color_buffer_float", "WEBGL_compressed_texture_s3tc", "WEBGL_compressed_texture_s3tc_srgb", "WEBGL_debug_renderer_info", "WEBGL_debug_shaders", "WEBGL_depth_texture", "WEBGL_draw_buffers", "WEBGL_lose_context", "WEBGL_multi_draw", "WEBGL_polygon_mode"])
     utils.overwriteProp(gl2Proto, "getSupportedExtensions", () => ["ANGLE_instanced_arrays", "EXT_blend_minmax", "EXT_clip_control", "EXT_color_buffer_half_float", "EXT_depth_clamp", "EXT_disjoint_timer_query", "EXT_float_blend", "EXT_frag_depth", "EXT_polygon_offset_clamp", "EXT_shader_texture_lod", "EXT_texture_compression_bptc", "EXT_texture_compression_rgtc", "EXT_texture_filter_anisotropic", "EXT_texture_mirror_clamp_to_edge", "EXT_sRGB", "KHR_parallel_shader_compile", "OES_element_index_uint", "OES_fbo_render_mipmap", "OES_standard_derivatives", "OES_texture_float", "OES_texture_float_linear", "OES_texture_half_float", "OES_texture_half_float_linear", "OES_vertex_array_object", "WEBGL_blend_func_extended", "WEBGL_color_buffer_float", "WEBGL_compressed_texture_s3tc", "WEBGL_compressed_texture_s3tc_srgb", "WEBGL_debug_renderer_info", "WEBGL_debug_shaders", "WEBGL_depth_texture", "WEBGL_draw_buffers", "WEBGL_lose_context", "WEBGL_multi_draw", "WEBGL_polygon_mode"])
+    glProto.getSupportedExtensions = gl2Proto.getSupportedExtensions
 
     const parameters = new Map()
     parameters.set(gl2Proto.MAX_VERTEX_UNIFORM_VECTORS, utils.randomChoose([127, 128, 255, 256, 511, 512, 1023, 1024, 2047, 2048, 4095, 4096]))
@@ -61,23 +61,27 @@ export function block() {
             console.error(e)
         }
 
-
-        return originalGetParameter.bind(this, parameter)()
+        return originalGetParameter.call(this, parameter)
     }
     glProto.getParameter = gl2Proto.getParameter
 
-    const originalBufferData = gl2Proto.bufferData
-    gl2Proto.bufferData = function (target, srcData, usage) {
-        try {
-            srcData[0] = utils.randomNumber(1, 5) * -0.1
-            srcData[1] = utils.randomNumber(5, 9) * -0.1
-            srcData[3] = utils.randomNumber(1, 9) * 0.1
-        } catch(e) {
-            console.error(e)
-        }
-        return originalBufferData.bind(this, target, srcData, usage)()
-    }
-    glProto.bufferData = gl2Proto.bufferData
+    // const originalBufferData = gl2Proto.bufferData
+    // const bufferNumber1 = utils.randomNumber(1, 5)
+    // const bufferNumber2 = utils.randomNumber(5, 9)
+    // const bufferNumber3 = utils.randomNumber(1, 9)
+    //
+    // gl2Proto.bufferData = function (target, srcData, usage) {
+    //     try {
+    //         // srcData[0] = bufferNumber1 * -0.1
+    //         // srcData[1] = bufferNumber2 * -0.1
+    //         // srcData[3] = bufferNumber3 * 0.1
+    //         srcData[3] = srcData[3] + -0.1
+    //     } catch(e) {
+    //         console.error(e)
+    //     }
+    //     return originalBufferData.bind(this, target, srcData, usage)()
+    // }
+    // glProto.bufferData = gl2Proto.bufferData
 
     utils.setName(WebGLRenderingContext, "getSupportedExtensions")
     utils.setName(WebGLRenderingContext, "getParameter")

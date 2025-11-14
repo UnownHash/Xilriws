@@ -34,12 +34,12 @@ const timezones = [
 ]
 
 export function block() {
-    utils.overwriteProp(navigator, "platform", "Win32")
-    utils.overwriteProp(navigator, "doNotTrack", utils.randomChoose(["unknown", "unknown", "1"]))
-    utils.overwriteProp(navigator, "maxTouchPoints", utils.randomChoose([0, 5, 10, 20]))
-    utils.overwriteProp(navigator, "productSub", "20030107")
+    utils.overwriteProp(Navigator.prototype, "platform", "Win32")
+    utils.overwriteProp(Navigator.prototype, "doNotTrack", utils.randomChoose(["unknown", "unknown", "1"]))
+    utils.overwriteProp(Navigator.prototype, "maxTouchPoints", utils.randomChoose([0, 5, 10, 20]))
+    utils.overwriteProp(Navigator.prototype, "productSub", "20030107")
     utils.overwriteProp(navigator.connection, "rtt", utils.randomChoose([undefined, 0, 50, 100]))
-    utils.overwriteProp(navigator, "hardwareConcurrency", utils.randomChoose([4, 8, 12, 16, 24, 32]))
+    utils.overwriteProp(Navigator.prototype, "hardwareConcurrency", utils.randomChoose([4, 8, 12, 16, 24, 32]))
 
     utils.overwriteProp(window.history, "length", utils.randomNumber(1, 5))
 
@@ -86,6 +86,6 @@ export function block() {
     }
     console.log("languages are " + languages.join(","))
 
-    utils.overwriteProp(navigator, "language", baseLanguage)
-    utils.overwriteProp(navigator, "languages", languages)
+    utils.overwriteProp(Navigator.prototype, "language", baseLanguage)
+    utils.overwriteProp(Navigator.prototype, "languages", languages)
 }

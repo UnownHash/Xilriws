@@ -53,6 +53,9 @@ class ExtensionComm:
                 action = data["action"]
                 detail = data["detail"]
 
+                if action == "debug:seed":
+                    logger.debug(f"Fingerprint Seed: {detail}")
+
                 futures = self.futures.get(action)
                 if not futures:
                     continue

@@ -39,7 +39,11 @@ class BrowserJoin(Browser):
             js_future, js_check_handler = await self.get_js_check_handler(JOIN_URL)
             cookie_future = await self.ext_comm.add_listener(FINISH_COOKIE_PURGE)
 
-            await self.new_tab()
+            # await self.new_tab()
+            try:
+                await self.new_tab_timeout()
+            except asyncio.TimeoutError:
+                raise LoginException("Timeout while opening tab (this is probably a bug)")
 
             proxy_future = await self.ext_comm.add_listener(FINISH_PROXY)
 
@@ -58,17 +62,19 @@ class BrowserJoin(Browser):
 
             self.first_run = False
 
-            self.tab.add_handler(zendriver.cdp.network.ResponseReceived, js_check_handler)
+            self.tab.add_handler(
+                zendriver.cdp.network.ResponseReceived, js_check_handler
+            )
             logger.info("Opening Join page")
 
-            await self.tab.get(url=JOIN_URL)
+            await self.get_page(JOIN_URL)
 
             html = await self.tab.get_content()
             if "neterror" in html.lower():
                 raise ProxyException(f"Page couldn't be reached (Proxy: {proxy.url})")
 
             try:
-                await asyncio.wait_for(js_future, timeout=100)
+                await asyncio.wait_for(js_future, timeout=20)
                 self.tab.handlers.clear()
                 logger.info("JS check done. reloading")
             except asyncio.TimeoutError:

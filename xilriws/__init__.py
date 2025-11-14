@@ -10,7 +10,7 @@ console_format = " | ".join(
     (
         "<cyan>{time:HH:mm:ss.SS}</cyan>",
         "<level>{level: >1.1}</level>",
-        "<cyan>{extra[name]: <10.10}</cyan>",
+        "<cyan>{extra[name]: <18.18}</cyan>",
         "<level>{message}</level>",
     )
 )
