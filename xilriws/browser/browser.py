@@ -223,7 +223,6 @@ class Browser:
         # are not represented by handlers, and can be removed
         enabled_domains = self.tab.enabled_domains.copy()
         for event_type in self.tab.handlers.copy():
-            logger.info(1)
             if len(self.tab.handlers[event_type]) == 0:
                 self.tab.handlers.pop(event_type)
                 continue
@@ -281,7 +280,6 @@ class Browser:
                     ping_timeout=900,
                     max_size=2**28,
                 )
-                logger.info(2)
                 self.tab.listener = zendriver.core.connection.Listener(self.tab)
             except (Exception,) as e:
                 logger.debug("exception during opening of websocket : %s", e)
@@ -289,7 +287,6 @@ class Browser:
                     self.tab.listener.cancel()
                 raise
         if not self.tab.listener or not self.tab.listener.running:
-            logger.info(3)
             self.tab.listener = zendriver.core.connection.Listener(self.tab)
             logger.debug("opened websocket connection to %s", self.tab.websocket_url)
 
@@ -318,16 +315,12 @@ class Browser:
         :return:
         """
         import itertools
-        logger.info("send")
 
-        logger.info(1)
         if not _is_update:
             await self.aopen()
-        logger.info(2)
         if self.tab.websocket is None:
             return  # type: ignore
         if self.tab._owner:
-            logger.info(3)
             browser = self.tab._owner
             # if browser.config:
             #     if browser.config.expert:
@@ -345,14 +338,11 @@ class Browser:
         tx = zendriver.core.connection.Transaction(cdp_obj)
         tx.connection = self.tab
         if not self.tab.mapper:
-            logger.info(6)
             self.tab.__count__ = itertools.count(0)
         async with self.tab._current_id_mutex:
-            logger.info(7)
             tx.id = next(self.tab.__count__)
         self.tab.mapper.update({tx.id: tx})
         if not _is_update:
-            logger.info(9)
             await self.tab._register_handlers()
         await self.tab.websocket.send(tx.message)
         try:
