@@ -441,8 +441,21 @@ class Browser:
 
     def __find_chrome_executable(self, return_all=False):
         candidates = ["/xilriws/chromium/chrome", "/chromium/chrome"]
+
+        chrome_path = os.environ.get("CHROME_PATH")
+        if self.__is_valid_chrome_executable(chrome_path):
+            return os.path.normpath(chrome_path)
+        if chrome_path:
+            logger.warning(f"Ignoring invalid CHROME_PATH: {chrome_path}")
+
+        chrome_path = xil_config.dev.chrome_path
+        if self.__is_valid_chrome_executable(chrome_path):
+            return os.path.normpath(chrome_path)
+        if chrome_path:
+            logger.warning(f"Ignoring invalid config dev.chrome_path: {chrome_path}")
+
         if sys.platform.startswith(("darwin", "cygwin", "linux", "linux2")):
-            for item in os.environ.get("PATH").split(os.pathsep):
+            for item in os.environ.get("PATH", "").split(os.pathsep):
                 for subitem in (
                     "brave",
                     "brave-browser",
@@ -502,3 +515,7 @@ class Browser:
             "could not find a valid chrome browser binary. please make sure chrome is installed."
             "or use the keyword argument 'browser_executable_path=/path/to/your/browser' "
         )
+
+    @staticmethod
+    def __is_valid_chrome_executable(path: str | None) -> bool:
+        return bool(path and os.path.exists(path) and os.access(path, os.X_OK))

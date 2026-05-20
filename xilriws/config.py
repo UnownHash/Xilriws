@@ -13,19 +13,26 @@ else:
 
 
 class GeneralConfig(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
     host: str = "0.0.0.0"
     port: int = 5090
 
 
 class DevConfig(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
     proxy_path: str = "/xilriws/xilriws-proxy"
     targetfp_path: str = "/xilriws/xilriws-targetfp"
     proxies_list_path: str = "/xilriws/proxies.txt"
+    chrome_path: str | None = None
     log_level: str = "INFO"
     headless_browser: bool = True
 
 
 class AppConfig(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
     general: GeneralConfig = Field(default_factory=GeneralConfig)
     dev: DevConfig = Field(default_factory=DevConfig)
 

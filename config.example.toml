@@ -7,5 +7,6 @@ port = 5090
 #proxies_list_path = "./proxies.txt"
 #targetfp_path = "./xilriws-targetfp"
 #proxy_path = "./xilriws-proxy"
+#chrome_path = "/path/to/chrome"
 #log_level = "DEBUG"
 #headless_browser = false
