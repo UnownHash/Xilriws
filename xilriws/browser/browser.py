@@ -35,7 +35,7 @@ class Browser:
         self.ext_comm = ext_comm
 
     async def start_browser(self):
-        if self.consecutive_failures >= 30:
+        if self.consecutive_failures >= xil_config.browser.restart_after_consecutive_failures:
             logger.critical(f"{self.consecutive_failures} consecutive failures in the browser! this is really bad")
             # await asyncio.sleep(60 * 30)
             self.consecutive_failures -= 1
@@ -45,7 +45,7 @@ class Browser:
         if self.browser:
             self.session_count += 1
 
-            if self.session_count % 60 == 0:
+            if self.session_count % xil_config.browser.restart_after_sessions == 0:
                 logger.info("Time for a browser restart")
                 await self.stop_browser()
             elif not await self.health_check():

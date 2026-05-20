@@ -7,11 +7,10 @@ from urllib.parse import ParseResult, urlparse
 
 from loguru import logger
 
+from xilriws.config import config
+
 if TYPE_CHECKING:
     from .extension_comm import ExtensionComm
-
-
-PROXY_TIMEOUT = 60 * 60
 
 
 class Proxy:
@@ -39,7 +38,7 @@ class Proxy:
         return f"{self.host}:{self.port}"
 
     def is_good(self):
-        return not self.invalidated and self.last_limited + PROXY_TIMEOUT < time.time()
+        return not self.invalidated and self.last_limited + config.auth.proxy.cooldown < time.time()
 
     def rate_limited(self):
         self.last_limited = time.time()

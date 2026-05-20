@@ -8,6 +8,7 @@ import zendriver
 from loguru import logger
 
 from xilriws.constants import JOIN_URL
+from xilriws.config import config
 from xilriws.extension_comm import FINISH_PROXY, FINISH_COOKIE_PURGE
 from xilriws.js import load, recaptcha
 from xilriws.proxy import Proxy
@@ -74,7 +75,7 @@ class BrowserJoin(Browser):
                 raise ProxyException(f"Page couldn't be reached (Proxy: {proxy.url})")
 
             try:
-                await asyncio.wait_for(js_future, timeout=20)
+                await asyncio.wait_for(js_future, timeout=config.timeouts.js_challenge)
                 self.tab.handlers.clear()
                 logger.info("JS check done. reloading")
             except asyncio.TimeoutError:

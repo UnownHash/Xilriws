@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from .proxy import Proxy, ProxyDistributor
 from loguru import logger
-import time
 import asyncio
 
+from xilriws.config import config
+
 logger = logger.bind(name="Proxy Dispenser")
-AUTH_TIMEOUT = 60 * 60
 
 
 class ProxyDispenser:
@@ -36,7 +36,7 @@ class ProxyDispenser:
 
     async def get_auth_proxy(self) -> Proxy:
         self.current_proxy_uses += 1
-        if self.current_proxy_uses > 100:
+        if self.current_proxy_uses > config.auth.proxy.max_uses_before_rotation:
             self.current_auth_index = (self.current_auth_index + 1) % len(self.proxies)
             self.current_proxy_uses = 0
 

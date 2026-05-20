@@ -30,9 +30,24 @@ class DevConfig(BaseModel):
     headless_browser: bool = True
 
 
+class AuthProxyConfig(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    cooldown: float = 60 * 60
+    max_uses_before_rotation: int = 100
+
+
+class BrowserConfig(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    restart_after_consecutive_failures: int = 30
+    restart_after_sessions: int = 100
+
+
 class AuthConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
 
+    proxy: AuthProxyConfig = Field(default_factory=AuthProxyConfig)
     cookie_max_uses: int = 7
     cookie_storage_size: int = 2
     max_auth_attempts: int = 3
@@ -42,6 +57,7 @@ class TimeoutConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     cdp: float = 10
+    js_challenge: float = 100
 
 
 class AppConfig(BaseModel):
@@ -50,6 +66,7 @@ class AppConfig(BaseModel):
     general: GeneralConfig = Field(default_factory=GeneralConfig)
     dev: DevConfig = Field(default_factory=DevConfig)
     auth: AuthConfig = Field(default_factory=AuthConfig)
+    browser: BrowserConfig = Field(default_factory=BrowserConfig)
     timeouts: TimeoutConfig = Field(default_factory=TimeoutConfig)
 
 

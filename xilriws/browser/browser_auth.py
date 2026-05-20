@@ -80,7 +80,7 @@ class BrowserAuth(Browser):
                 if not js_future.done():
                     try:
                         logger.info("Waiting for JS check")
-                        await asyncio.wait_for(js_future, timeout=100)
+                        await asyncio.wait_for(js_future, timeout=config.timeouts.js_challenge)
                         self.tab.handlers.clear()
                         logger.info("JS check done. reloading")
                     except asyncio.TimeoutError:
