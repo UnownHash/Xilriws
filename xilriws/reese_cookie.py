@@ -34,7 +34,7 @@ class ReeseCookie:
 
 
 class CookieMonster:
-    fill_event: asyncio.Event
+    fill_event: asyncio.Event | None = None
 
     def __init__(self, browser: BrowserAuth, proxies: ProxyDistributor, proxy_dispenser: ProxyDispenser):
         self.browser: BrowserAuth = browser
@@ -44,20 +44,34 @@ class CookieMonster:
 
     async def prepare(self):
         self.fill_event = asyncio.Event()
-        task_creator.create_task(self.fill_task())
-        self.fill_event.set()
+        if config.auth.cookie_storage_size > 0:
+            task_creator.create_task(self.fill_task())
+            self.fill_event.set()
 
     async def get_reese_cookie(self) -> ReeseCookie:
-        logger.info("Getting a reese cookie from storage")
+        logger.info("Getting a reese cookie")
         cookie: ReeseCookie | None = None
 
-        while not cookie:
-            possible_cookie = await self.get_next_cookie()
-            if not possible_cookie.is_good():
-                await self.cookies.remove(possible_cookie)
-                self.fill_event.set()
-            else:
-                cookie = possible_cookie
+        if config.auth.cookie_storage_size <= 0:
+            while not cookie:
+                if not len(self.cookies):
+                    if not await self.__get_one_cookie():
+                        continue
+
+                possible_cookie = await self.get_next_cookie()
+                if not possible_cookie.is_good():
+                    await self.cookies.remove(possible_cookie)
+                else:
+                    cookie = possible_cookie
+        else:
+            while not cookie:
+                possible_cookie = await self.get_next_cookie()
+                if not possible_cookie.is_good():
+                    await self.cookies.remove(possible_cookie)
+                    if self.fill_event:
+                        self.fill_event.set()
+                else:
+                    cookie = possible_cookie
 
         cookie.use()
         logger.info("Cookie selected")
