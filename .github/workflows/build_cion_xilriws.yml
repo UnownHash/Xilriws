@@ -35,7 +35,9 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./DockerfileCion
+          file: ./Dockerfile
+          build-args: |
+            ENTRYPOINT_SCRIPT=app_cion.py
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
           push: true

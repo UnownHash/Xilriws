@@ -40,4 +40,5 @@ RUN mkdir chromium_install \
 COPY . .
 RUN uv sync --frozen --no-install-project
 
-ENTRYPOINT ["uv", "run", "--frozen", "python", "app.py"]
+ARG ENTRYPOINT_SCRIPT=app.py
+ENTRYPOINT ["uv", "run", "--frozen", "python", "${ENTRYPOINT_SCRIPT}"]
