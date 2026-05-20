@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:noble-20251013@sha256:c35e29c9450151419d9448b0fd75374fec4fff364a27f176fb458d472dfc9e54
 
 # setup environment
 RUN apt update -y && \
@@ -6,14 +6,15 @@ RUN apt update -y && \
 
 WORKDIR /xilriws
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt install -y software-properties-common
 RUN apt update && apt install -y python3 python3-venv
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
+ENV UV_PROJECT_ENVIRONMENT="/opt/venv"
 RUN pip install --upgrade pip==25.0.1
-RUN pip install poetry
+RUN pip install uv==0.11.7
 
 # install chromium dependencies
 # from https://github.com/ungoogled-software/ungoogled-chromium-portablelinux/blob/master/docker/build.Dockerfile
@@ -37,6 +38,6 @@ RUN mkdir chromium_install \
 
 # install Xilriws dependencies
 COPY . .
-RUN poetry install --no-root
+RUN uv sync --frozen --no-install-project
 
-ENTRYPOINT ["poetry", "run", "python", "app.py"]
+ENTRYPOINT ["uv", "run", "--frozen", "python", "app.py"]

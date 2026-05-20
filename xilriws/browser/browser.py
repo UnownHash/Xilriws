@@ -10,14 +10,12 @@ import typing
 import zendriver
 from loguru import logger
 
-from xilriws.debug import IS_DEBUG
 from xilriws.extension_comm import ExtensionComm
-from xilriws.proxy import ProxyDistributor
 from xilriws.ptc_auth import LoginException
 from xilriws.ptc.ptc_utils import USER_AGENT
+from xilriws.config import config as xil_config
 
 logger = logger.bind(name="Browser")
-HEADLESS = not IS_DEBUG
 
 
 class ProxyException(Exception):
@@ -55,9 +53,9 @@ class Browser:
                 await self.stop_browser()
 
         if not self.browser:
-            config = zendriver.Config(headless=HEADLESS, browser_executable_path=self.__find_chrome_executable())
+            config = zendriver.Config(headless=xil_config.dev.headless_browser, browser_executable_path=self.__find_chrome_executable())
             config.add_argument(f"--user-agent={USER_AGENT}")
-            if not IS_DEBUG:
+            if xil_config.dev.headless_browser:
                 config.add_argument("--window-size=1,1")
 
             disabled_features = [

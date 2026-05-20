@@ -4,7 +4,8 @@ import logging
 import sys
 
 from loguru import logger
-from .debug import IS_DEBUG
+
+from xilriws.config import config
 
 console_format = " | ".join(
     (
@@ -21,7 +22,7 @@ logger.add(
     sink=sys.stdout,
     format=console_format,
     colorize=True,
-    level=logging.DEBUG if IS_DEBUG else logging.INFO,
+    level=config.dev.log_level,
     filter=lambda record: record["level"].no < logging.ERROR,
     enqueue=True,
 )

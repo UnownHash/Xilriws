@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 import asyncio
-import json
 import logging
-import os.path
 import signal
 import sys
 
@@ -11,6 +9,7 @@ import uvicorn
 from loguru import logger
 
 from xilriws.browser import BrowserAuth, BrowserJoin
+from xilriws.config import config
 from xilriws.extension_comm import ExtensionComm
 from xilriws.mode import AuthMode, CionMode
 from xilriws.proxy import ProxyDistributor
@@ -37,18 +36,12 @@ if sys.platform != "win32":
 
 
 async def main(cion_mode: bool):
-    if os.path.exists("config.json"):
-        with open("config.json", "r") as f:
-            config: dict[str, str | int] = json.load(f)
-    else:
-        config = {}
-
     ext_comm = ExtensionComm()
     task_creator.create_task(ext_comm.start())
 
     extenstion_paths = [
-        config.get("proxy", "/xilriws/xilriws-proxy"),
-        config.get("targetfp_path", "/xilriws/xilriws-targetfp"),
+        config.dev.proxy_path,
+        config.dev.targetfp_path,
     ]
 
     if cion_mode:
@@ -59,15 +52,15 @@ async def main(cion_mode: bool):
     else:
         proxies = ProxyDistributor(ext_comm)
         proxy_dispenser = ProxyDispenser(
-            config.get("proxies_list_path", "/xilriws/proxies.txt")
+            config.dev.proxies_list_path
         )
 
         mode = AuthMode(BrowserAuth(extension_paths=extenstion_paths, ext_comm=ext_comm, proxies=proxies), proxies, proxy_dispenser)
 
     await mode.prepare()
 
-    port = config.get("port", 5090)
-    host = config.get("host", "0.0.0.0")
+    port = config.general.port
+    host = config.general.host
 
     app = mode.get_litestar()
     server_config = uvicorn.Config(app, port=port, host=host, log_config=None)

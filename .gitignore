@@ -1,6 +1,7 @@
 .idea/*
 **/__pycache__/**
 config.json
+config.toml
 docker-compose.yml
 dist/*
 build/*
