@@ -6,6 +6,7 @@ import zendriver
 from loguru import logger
 
 from xilriws.constants import ACCESS_URL
+from xilriws.config import config
 from xilriws.extension_comm import FINISH_COOKIE_PURGE, ExtensionComm, FINISH_PROXY
 from xilriws.proxy import ProxyDistributor
 from xilriws.ptc import ptc_utils
@@ -63,7 +64,7 @@ class BrowserAuth(Browser):
 
             try:
                 await self.get_page(ACCESS_URL + "login")
-                html = await asyncio.wait_for(self.tab.get_content(), timeout=20)
+                html = await asyncio.wait_for(self.tab.get_content(), timeout=config.timeouts.cdp)
             except asyncio.TimeoutError:
                 raise ProxyException(f"Page timed out (Proxy: {proxy.url})")
 
@@ -100,7 +101,7 @@ class BrowserAuth(Browser):
                     logger.debug(f"Checking reload content #{attempts}")
 
                     try:
-                        new_html = await asyncio.wait_for(self.tab.get_content(), timeout=10)
+                        new_html = await asyncio.wait_for(self.tab.get_content(), timeout=config.timeouts.cdp)
                     except asyncio.TimeoutError:
                         raise LoginException("Timeout while getting content")
 

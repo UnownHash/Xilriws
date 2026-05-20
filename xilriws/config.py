@@ -38,12 +38,19 @@ class AuthConfig(BaseModel):
     max_auth_attempts: int = 3
 
 
+class TimeoutConfig(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    cdp: float = 10
+
+
 class AppConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     general: GeneralConfig = Field(default_factory=GeneralConfig)
     dev: DevConfig = Field(default_factory=DevConfig)
     auth: AuthConfig = Field(default_factory=AuthConfig)
+    timeouts: TimeoutConfig = Field(default_factory=TimeoutConfig)
 
 
 def load_config(path: str | Path = "config.toml") -> AppConfig:

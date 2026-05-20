@@ -7,6 +7,9 @@ cookie_max_uses = 7
 cookie_storage_size = 2
 max_auth_attempts = 3
 
+[timeouts]
+cdp = 10
+
 # uncomment if you want to run this without docker
 #[dev]
 #proxies_list_path = "./proxies.txt"

@@ -158,7 +158,7 @@ class Browser:
                 pass
 
         try:
-            await asyncio.wait_for(_check(), timeout=10)
+            await asyncio.wait_for(_check(), timeout=xil_config.timeouts.cdp)
             return True
         except Exception:
             return False
@@ -170,7 +170,10 @@ class Browser:
             attempts -= 1
             logger.debug("Sending get_cookies")
 
-            cookies = await self.tab.send(zendriver.cdp.network.get_cookies())
+            cookies = await asyncio.wait_for(
+                self.tab.send(zendriver.cdp.network.get_cookies()),
+                timeout=xil_config.timeouts.cdp,
+            )
             logger.debug(f"Cookies: {cookies}")
             for cookie in cookies:
                 if cookie.name == "reese84":
@@ -205,7 +208,7 @@ class Browser:
         return js_future, js_check_handler
 
     async def new_tab_timeout(self):
-        await asyncio.wait_for(self.new_tab(), 10)
+        await asyncio.wait_for(self.new_tab(), xil_config.timeouts.cdp)
 
     async def _register_handlers(self) -> None:
         """
@@ -379,7 +382,7 @@ class Browser:
         await self.send(zendriver.cdp.page.navigate(url))
 
         try:
-            await asyncio.wait_for(future, 10)
+            await asyncio.wait_for(future, xil_config.timeouts.cdp)
         except:
             raise LoginException("Timeout while opening tab. this is probably a bug")
         self.tab.browser.connection.remove_handlers(event_type, get_handler)
