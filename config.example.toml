@@ -2,22 +2,22 @@
 host = "0.0.0.0"
 port = 5090
 
-[auth]
-cookie_max_uses = 7
-cookie_storage_size = 2
-max_auth_attempts = 3
-
-[auth.proxy]
-cooldown = 3600
-max_uses_before_rotation = 100
-
-[browser]
-restart_after_consecutive_failures = 30
-restart_after_sessions = 100
-
-[timeouts]
-cdp = 10
-js_challenge = 100
+#[auth]
+#cookie_max_uses = 7  # max amount of accounts to auth per cookie
+#cookie_storage_size = 2  # max amount of cookies to keep in storage. 0 = only fetch a new one when needed
+#max_auth_attempts = 2  # attempts per account
+#
+#[auth.proxy]
+#cooldown = 3600  # seconds to wait between re-using the same proxy
+#max_uses_before_rotation = 100  # switch proxy after this many uses
+#
+#[browser]
+#restart_after_consecutive_failures = 30
+#restart_after_sessions = 100
+#
+#[timeouts]
+#js_challenge = 100  # set lower if your proxy + hardware is good, higher if not
+#cdp = 10  # timeout for waiting for responses from chrome
 
 # uncomment if you want to run this without docker
 #[dev]
