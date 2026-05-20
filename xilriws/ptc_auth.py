@@ -7,7 +7,8 @@ import httpx
 from loguru import logger
 from curl_cffi import requests
 
-from .constants import ACCESS_URL, COOKIE_STORAGE
+from .config import config
+from .constants import ACCESS_URL
 from xilriws.ptc import ptc_utils
 
 if TYPE_CHECKING:
@@ -44,7 +45,7 @@ class PtcAuth:
         # if proxy:
         #     proxies = {"http://": proxy, "https://": proxy}
 
-        attempts = COOKIE_STORAGE + 1
+        attempts = config.auth.max_auth_attempts
         while attempts > 0:
             attempts -= 1
             cookie = await self.cookie_monster.get_reese_cookie()

@@ -5,6 +5,7 @@ port = 5090
 [auth]
 cookie_max_uses = 7
 cookie_storage_size = 2
+max_auth_attempts = 3
 
 # uncomment if you want to run this without docker
 #[dev]

@@ -35,6 +35,7 @@ class AuthConfig(BaseModel):
 
     cookie_max_uses: int = 7
     cookie_storage_size: int = 2
+    max_auth_attempts: int = 3
 
 
 class AppConfig(BaseModel):
