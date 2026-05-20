@@ -6,7 +6,8 @@ from typing import TYPE_CHECKING
 
 from loguru import logger
 
-from .constants import EXPIRATION, MAX_USES, COOKIE_STORAGE
+from .config import config
+from .constants import EXPIRATION, COOKIE_STORAGE
 from .proxy import ProxyDistributor, Proxy
 from .proxy_dispenser import ProxyDispenser
 from .task_creator import task_creator, AwaitableSet
@@ -26,7 +27,7 @@ class ReeseCookie:
         self.proxy = proxy
 
     def is_good(self) -> bool:
-        return time.time() < self.expiration and self.uses < MAX_USES
+        return time.time() < self.expiration and self.uses < config.auth.cookie_max_uses
 
     def use(self) -> None:
         self.uses += 1
@@ -107,4 +108,3 @@ class CookieMonster:
 
         await self.cookies.add(cookie)
         return cookie
-

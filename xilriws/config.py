@@ -30,11 +30,18 @@ class DevConfig(BaseModel):
     headless_browser: bool = True
 
 
+class AuthConfig(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    cookie_max_uses: int = 7
+
+
 class AppConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     general: GeneralConfig = Field(default_factory=GeneralConfig)
     dev: DevConfig = Field(default_factory=DevConfig)
+    auth: AuthConfig = Field(default_factory=AuthConfig)
 
 
 def load_config(path: str | Path = "config.toml") -> AppConfig:

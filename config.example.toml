@@ -2,6 +2,9 @@
 host = "0.0.0.0"
 port = 5090
 
+[auth]
+cookie_max_uses = 7
+
 # uncomment if you want to run this without docker
 #[dev]
 #proxies_list_path = "./proxies.txt"
