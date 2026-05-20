@@ -34,6 +34,7 @@ class AuthConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     cookie_max_uses: int = 7
+    cookie_storage_size: int = 2
 
 
 class AppConfig(BaseModel):

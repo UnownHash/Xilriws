@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from loguru import logger
 
 from .config import config
-from .constants import EXPIRATION, COOKIE_STORAGE
+from .constants import EXPIRATION
 from .proxy import ProxyDistributor, Proxy
 from .proxy_dispenser import ProxyDispenser
 from .task_creator import task_creator, AwaitableSet
@@ -74,9 +74,9 @@ class CookieMonster:
             logger.info("Filling cookie storage in the background")
 
             try:
-                while len(self.cookies) < COOKIE_STORAGE:
+                while len(self.cookies) < config.auth.cookie_storage_size:
                     await self.__get_one_cookie()
-                    logger.info(f"Cookie storage at {len(self.cookies)}/{COOKIE_STORAGE}")
+                    logger.info(f"Cookie storage at {len(self.cookies)}/{config.auth.cookie_storage_size}")
             except Exception as e:
                 logger.exception("unhandled exception while filling cookie storage, please report", e)
 
