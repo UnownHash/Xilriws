@@ -10,11 +10,11 @@
 
       ungoogledChromiumPortable = pkgs.stdenv.mkDerivation {
         pname = "ungoogled-chromium-portable";
-        version = "141.0.7390.122-1";
+        version = "146.0.7680.177-1";
 
         src = pkgs.fetchurl {
-          url = "https://github.com/ungoogled-software/ungoogled-chromium-portablelinux/releases/download/141.0.7390.122-1/ungoogled-chromium-141.0.7390.122-1-x86_64_linux.tar.xz";
-          hash = "sha256-Qf/6pCArJMgSZErl5elL7m/9Hg64E7HntUGGCy+hf68=";
+          url = "https://github.com/ungoogled-software/ungoogled-chromium-portablelinux/releases/download/146.0.7680.177-1/ungoogled-chromium-146.0.7680.177-1-x86_64_linux.tar.xz";
+          hash = "sha256-+Jya5ixEZWm//4qplU5PF8uG2twnJiYIbCo+Fep5DjY=";
         };
 
         nativeBuildInputs = with pkgs; [

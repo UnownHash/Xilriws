@@ -99,7 +99,11 @@ class BrowserAuth(Browser):
                     attempts += 1
                     logger.debug(f"Checking reload content #{attempts}")
 
-                    new_html = await self.tab.get_content()
+                    try:
+                        new_html = await asyncio.wait_for(self.tab.get_content(), timeout=10)
+                    except asyncio.TimeoutError:
+                        raise LoginException("Timeout while getting content")
+
                     if "log in" not in new_html.lower():
                         logger.debug(new_html)
                         proxy.rate_limited()

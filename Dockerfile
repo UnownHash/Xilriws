@@ -29,7 +29,7 @@ RUN apt-get -y install wget bison debhelper desktop-file-utils flex gperf gsetti
   uuid-dev valgrind wdiff x11-apps xcb-proto xfonts-base xvfb xz-utils yasm
 
 # install chromium
-RUN wget -O chromium.tar.xz https://github.com/ungoogled-software/ungoogled-chromium-portablelinux/releases/download/141.0.7390.122-1/ungoogled-chromium-141.0.7390.122-1-x86_64_linux.tar.xz
+RUN wget -O chromium.tar.xz https://github.com/ungoogled-software/ungoogled-chromium-portablelinux/releases/download/146.0.7680.177-1/ungoogled-chromium-146.0.7680.177-1-x86_64_linux.tar.xz
 RUN mkdir chromium_install \
     && tar -xf chromium.tar.xz -C chromium_install/ \
     && mkdir chromium \

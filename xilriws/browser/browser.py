@@ -168,8 +168,10 @@ class Browser:
         attempts = 10
         while not reese_value and attempts > 0:
             attempts -= 1
+            logger.debug("Sending get_cookies")
 
             cookies = await self.tab.send(zendriver.cdp.network.get_cookies())
+            logger.debug(f"Cookies: {cookies}")
             for cookie in cookies:
                 if cookie.name == "reese84":
                     logger.info("Got cookies")
