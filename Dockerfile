@@ -41,4 +41,5 @@ COPY . .
 RUN uv sync --frozen --no-install-project
 
 ARG ENTRYPOINT_SCRIPT=app.py
-ENTRYPOINT ["uv", "run", "--frozen", "python", "${ENTRYPOINT_SCRIPT}"]
+ENV ENTRYPOINT_SCRIPT=${ENTRYPOINT_SCRIPT}
+ENTRYPOINT ["sh", "-c", "exec uv run --frozen python \"$ENTRYPOINT_SCRIPT\""]
