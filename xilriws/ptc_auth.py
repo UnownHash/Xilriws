@@ -165,10 +165,10 @@ class PtcAuth:
             raise PtcBanned()
 
     def __extract_login_code(self, html) -> str | None:
-        matches = re.search(r"pokemongo://state=(.*?)(?:,code=(.*?))?(?='|$)", html)
+        matches = re.search(r"""pokemongo://state=[^,'"]+,code=([^'"<>&\s]+)""", html)
 
-        if matches and len(matches.groups()) == 2:
-            return matches.group(2)
+        if matches:
+            return matches.group(1)
 
     def __extract_csrf_and_challenge(self, html: str) -> tuple[str, str]:
         csrf_regex = re.compile(r'name="_csrf" value="(.*?)">')

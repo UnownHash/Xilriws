@@ -18,3 +18,7 @@ this assumes you have everything in the same docker network. if you're hosting i
 something else accordingly.
 
 To update: `docker compose pull && docker compose restart`
+
+## License
+
+Xilriws is licensed under the [GNU Affero General Public License v3.0 only](LICENSE) (`AGPL-3.0-only`).
