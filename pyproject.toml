@@ -2,6 +2,7 @@
 name = "xilriws"
 version = "0.1.0"
 description = ""
+license = "AGPL-3.0-only"
 authors = ["Malte <42342921+ccev@users.noreply.github.com>"]
 readme = "README.md"
 
